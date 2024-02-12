@@ -1,0 +1,63 @@
+﻿<!-- MetaDataType Modal For Add New -- Start Here -->
+<div class="modal fade" id="addMetaDataTypeModal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+    <div id="gradient"></div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="metadata-modal-title">Add Metadata</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="metadata-form" action="/CompanyAdmin/Document/CreateMetaDataType">
+                    <div class="form-group">
+                        <label for="metadata-name">METADATA NAME:</label>
+                        <input type="text" id="metadata-name" class="form-control" placeholder="Enter metadata name" required>
+                        <span id="metaDataNameError" class="error-message" style="color: red;"></span>
+                    </div>
+                    <label for="metadataType">METADATA DATA TYPE</label>
+                    <div class="input-group select-with-arrow">
+                        <select id="metadataType" class="form-control">
+                            <option value="Text">Text</option>
+                            <option value="Number/Large Number">Number/Large Number</option>
+                            <option value="Currency">Currency</option>
+                            <option value="Yes/No">Yes/No</option>
+                            <option value="Date/Time">Date/Time</option>
+                            <option value="Rich Text">Rich Text</option>
+                            <option value="Attachment">Attachment - any document on front end that can be downloaded</option>
+                            <option value="Hyperlink">Hyperlink</option>
+                            <option value="Memo">Memo</option>
+                        </select>
+                    </div>
+                    <span id="metaDataTypeError" class="error-message" style="color: red;"></span>
+                    <br />
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="PERMISSIONS">PERMISSIONS *</label>
+                            <div>
+                                <p class="fade-text">Select 1 user group or multiple by holding Ctrl button</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="UserGroup" class="col-sm-4 col-form-label" style="padding-right: 0;">USER GROUP</label>
+                            <div class="col-sm-8">
+                                <select asp-for="@Model.?UserGroup.?UserGroupName" name="UserGroupName" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" id="metaGroupList" multiple>
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="UserGroupError" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-save" onclick="saveMetadata()">ADD</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MetaDataType Modal For Add New -- End Here -->

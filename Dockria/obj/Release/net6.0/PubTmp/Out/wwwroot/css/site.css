@@ -1,0 +1,59 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+@keyframes scrollText {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+@keyframes scrollText {
+    0% {
+        transform: translateX(100%);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Media query for small screens */
+@media screen and (max-width: 767px) {
+    .large-font {
+        font-size: 1em; /* Adjusted font size for small screens */
+    }
+}
+
+/* Media query for medium screens */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+    .large-font {
+        font-size: 1.5em; /* Adjusted font size for medium screens */
+    }
+}
+
+/* Media query for large screens */
+@media screen and (min-width: 1024px) {
+    .large-font {
+        font-size: 2em; /* Adjusted font size for large screens */
+    }
+}

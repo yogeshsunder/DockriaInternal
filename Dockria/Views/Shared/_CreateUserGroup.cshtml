@@ -1,0 +1,47 @@
+﻿﻿<!-- Form fields for adding/updating user details -->
+<form id="addUserForm" action="/CompanyAdmin/CompanyAdmin/CreateGroup" method="post">
+    <div class="form-group">
+        <label for="email1">User Group Name</label>
+        <input type="email" id="email1" name="email1" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <select onclick="showData()" for="UsersList" class="form-control form-control-sm" aria-required="true" id="subscriptionList" multiple>
+            <option value="Select Subscription" disabled selected>Select UserList</option>
+        </select>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        // Load the user list dynamically
+        showData();
+    });
+
+    function showData() {
+        $.ajax({
+            url: '/CompanyAdmin/UserGroup/UserName', // Replace with the actual URL to your Create action method
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                populateDropdown('#subscriptionList', data.userlist);
+            },
+            error: function (error) {
+                console.error(error.StatusText);
+            }
+        });
+    }
+
+    function populateDropdown(selector, options) {
+        var dropdown = $(selector);
+        dropdown.empty();
+        dropdown.append('<option disabled selected>Select User List</option>');
+
+        $.each(options, function (index, option) {
+            dropdown.append($('<option>', {
+                value: option.value,
+                text: option.text
+            }));
+        });
+    }
+</script>

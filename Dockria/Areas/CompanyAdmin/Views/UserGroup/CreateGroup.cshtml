@@ -1,0 +1,14 @@
+﻿﻿
+@{
+    ViewData["Title"] = "CreateGroup";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div id="user-list" class="row">
+    <div id="company-user-list" class="col-md-3">
+    </div>
+
+    <div class="col-md-9 ">
+        @await Html.PartialAsync("_CreateUserGroup", new Domain.Model.UserGroup())
+    </div>
+</div>

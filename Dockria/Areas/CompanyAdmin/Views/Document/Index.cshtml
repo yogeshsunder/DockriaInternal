@@ -1,0 +1,445 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Define the CSS styles here *@
+@{
+    <text>
+        <style>
+            .mata-list-box {
+                height: 400px;
+                overflow-y: scroll;
+                border: 1px solid #ccc;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+                .mata-list-box::-webkit-scrollbar {
+                    width: 20px; /* Increase the width of the scrollbar */
+                    background-color: #f1f1f1;
+                }
+
+                .mata-list-box::-webkit-scrollbar-thumb {
+                    background-color: #888;
+                }
+
+                    .mata-list-box::-webkit-scrollbar-thumb:hover {
+                        background-color: #555;
+                    }
+
+            .mata-list {
+                padding-right: 16px;
+                font-size: 16px;
+            }
+
+            /*Add your hover styles here */
+            .btn-edit:hover {
+                background-color: #eaeaea;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            /*Add your hover styles here */
+            .btn-delete:hover {
+                background-color: crimson;
+                color: black;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            /*Add your hover effect styles here / / For example, change the background color and add a box shadow */
+            .hover-effect {
+                background-color: #f5f5f5;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+                /*/ Define the styles for the hover state / / For example, change the background color and add a different box shadow */
+                .hover-effect:hover {
+                    background-color: #eaeaea;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+
+            /*/ Define the background color for the success message /*/
+            .toast-success {
+                background-color: green;
+            }
+
+                /*/ Define the text color for the success message /*/
+                .toast-success .toast-message {
+                    color: white;
+                }
+
+            .card-effect {
+                border: 1px solid #000;
+                padding: 15px;
+                border-radius: 5px;
+                background-color: #fff;
+            }
+
+            .fade-text {
+                font-size: 0.8em;
+                color: rgba(0, 0, 0, 0.5);
+            }
+
+            .select-with-arrow {
+                position: relative;
+            }
+
+                .select-with-arrow::after {
+                    content: "";
+                    position: absolute;
+                    top: 50%;
+                    right: 20px;
+                    transform: translateY(-50%);
+                    width: 0;
+                    height: 0;
+                    border-style: solid;
+                    border-width: 5px 5px 0 5px;
+                    border-color: #000000 transparent transparent transparent;
+                    pointer-events: none;
+                }
+
+            .button-container {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                max-width: 400px; /* Adjust this value as needed */
+                margin: 0 auto; /* Centers the button container horizontally */
+            }
+
+                .button-container button {
+                    flex-grow: 1;
+                    margin: 0 5px; /* Add margin between buttons */
+                }
+
+            .btn-dark-green {
+                background-color: #006400; /* Replace with your desired dark green color */
+                color: #fff; /* Set text color to white or any other desired color */
+            }
+
+                .btn-dark-green:hover {
+                    background-color: #0000FF; /* Replace with your desired dark green color on hover */
+                    color: #fff;
+                }
+
+            .Meta-Data {
+                margin-bottom: 0;
+            }
+
+            .metadata-form-popup {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+            }
+
+            .popup-content {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #fff;
+                padding: 20px;
+            }
+
+                .popup-content h3 {
+                    margin-top: 0;
+                }
+
+                .popup-content .form-group {
+                    margin-bottom: 15px;
+                }
+
+        </style>
+    </text>
+}
+
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title" style="color: #000; font-weight:700;">DOCUMENTS LIST</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tblData" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr class="text-center">
+                                <th class="wd-15p border-bottom-0" style="color: #000; font-weight:700;">DOC TYPE NAME</th>
+                                <th class="wd-15p border-bottom-0" style="color: #000; font-weight:700;">OCR Enabled/Disabled</th>
+                                <th class="wd-15p border-bottom-0" style="color: #000; font-weight:700;">AUTO FILE Name</th>
+                                <th class="wd-15p border-bottom-0" style="color: #000; font-weight:700;">Versioning Enabled/Disabled</th>
+                                <th style="color: #000; font-weight:700;">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+                            <div class="col-auto">
+                                <button onclick="exportExcel()" class="btn btn-sm btn-link hover-effect"
+                                        title="Export Excel" data-bs-placement="top" style="color: green;">
+                                    <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-link hover-effect" style="color: black;"
+                                        title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 15px; color: red;"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <a href="#" class="btn btn-sm btn-link text-warning hover-effect" data-bs-toggle="modal"
+                                   title="Add Document" data-bs-placement="top" data-bs-original-title="Add Document" data-bs-target="#addDocumentModal">
+                                    <i class="fa fa-plus-circle plus-icon" style="font-size: 15px;"></i>
+                                </a>
+                            </div>
+                            @*<div class="col-auto">
+                            <a href="#" class="btn btn-sm btn-link hover-effect" data-bs-toggle="modal" title="Add Bulk User " data-bs-placement="top" data-bs-original-title="Add User" data-bs-target="#bulkUserModal">
+                            <i class="fa fa-users" style="font-size: 15px; color: red;"></i>
+                            </a>
+                            </div>*@
+                        </div>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Start Here - Add New Company User Modal *@
+<div id="addDocumentModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="height: 600px; max-width: 1000px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: #000; font-weight:700;" id="addUserModalLabel">CREATE NEW DOCUMENT TYPE</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="addDocumentForm" action="/CompanyAdmin/Document/CreateDocument" method="post">
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="docTypeName" class="col-sm-4 col-form-label" style="padding-right: 0;color: #000; font-weight:700;">DOC TYPE NAME:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="docTypeName" name="DocTypeName" class="form-control" style="margin-bottom: 0;" />
+                                <span id="DocTypeNameError" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top:0.8em;">
+                            <div class="col-sm-2 offset-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="ocr" name="OCR" style="margin-bottom: 0;">
+                                    <label for="ocr" class="form-check-label" style="color: #000; font-weight:700;">OCR</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 offset-2">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="versioning" name="VERSIONING" style="margin-bottom: 0;">
+                                    <label for="versioning" class="form-check-label" style="color: #000; font-weight:700;">VERSIONING</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="PERMISSIONS" style="color: #000; font-weight:700;">PERMISSIONS *</label>
+                            <div>
+                                <p class="fade-text">Select 1 user group or multiple by holding Ctrl button</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="UserGroup" class="col-sm-4 col-form-label" style="padding-right: 0;color: #000; font-weight:700;">USER GROUP</label>
+                            <div class="col-sm-8 select-with-arrow">
+                                <select asp-for="@Model.?UserGroup.?UserGroupName" name="UserGroupName" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" id="groupList">
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="UserGroupError" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="DocumentNaming" style="color: #000; font-weight:700;">DOCUMENT NAMING *</label>
+                            <div>
+                                <p class="fade-text">Select one of the FileName Metadata created from the list. Only 1 Selection</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="AutoFileName" class="col-sm-4 col-form-label" style="padding-right: 0;color: #000; font-weight:700;">AUTO FILE NAME</label>
+                            <div class="col-sm-8 select-with-arrow">
+                                <select for="AutoFileName" name="AutoFileName" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" id="autoFileNameList">
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="AutoFileNameError" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="MetaData" style="color: #000; font-weight:700;">INSERT METADATA (optional)</label>
+                            <div>
+                                <p class="fade-text">
+                                    Select metadata from the list or leave it blank.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-8">&nbsp;&nbsp; METADATA NAME</th>
+                                                <th class="col-2 text-center align-middle">REQUIRED?</th>
+                                                <th class="col-1 text-center align-middle">DELETE</th>
+                                                <th class="col-1 text-center align-middle">ADD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Meta-Data">
+                                            <tr>
+                                                <td class="col-8">
+                                                    <input type="text" class="form-control no-border" placeholder="Document Date*" readonly>
+                                                </td>
+                                                <td class="col-2 text-center align-middle">
+                                                    <label class="d-flex justify-content-center align-items-center">
+                                                        <input type="checkbox" disabled class="form-check-input">
+                                                    </label>
+                                                </td>
+                                                <td class="col-1 text-center align-middle">
+                                                    <a class="remove-icon">
+                                                        <i class="fa fa-remove"></i>
+                                                    </a>
+                                                </td>
+                                                <td class="col-1 text-center align-middle">
+                                                    <a href="#" class="btn add-btn" title="Add Metadata" data-bs-placement="top" data-bs-original-title="Add MetaData"
+                                                       data-bs-toggle="modal" data-bs-target="#metadata-modal">
+                                                        <i class="fa fa-plus"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-dark-green" id="addUserSubmitButton">SAVE</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Add New Company User Modal *@
+
+
+<!-- Metadata Modal -->
+<div class="modal fade" id="metadata-modal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="metadata-modal-title">Add Metadata</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="metadata-form">
+                    <div class="form-group">
+                        <label for="metadata-name">Metadata Name:</label>
+                        <input type="text" id="metadata-name" class="form-control" placeholder="Enter metadata name" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="margin-right:4px;">Required/Unrequired:</label>
+                        <input type="checkbox" id="metadata-required" class="form-check-input">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addMetadata()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addMetadata() {
+        // Get form values
+        var metadataName = document.getElementById('metadata-name').value;
+        var metadataRequired = document.getElementById('metadata-required').checked;
+
+        // Get the first row of the metadata table
+        var firstRow = document.querySelector('.Meta-Data tr:first-child');
+
+        // Update the first row with the entered data
+        var metadataNameCell = firstRow.querySelector('.col-8');
+        metadataNameCell.textContent = metadataName;
+
+        var metadataRequiredCell = firstRow.querySelector('.col-2');
+        metadataRequiredCell.textContent = metadataRequired ? 'Required' : 'Not Required';
+
+        // Reset the form values
+        document.getElementById('metadata-form').reset();
+
+        // Close the modal
+        var modal = document.getElementById('metadata-modal');
+        var bootstrapModal = bootstrap.Modal.getInstance(modal);
+        bootstrapModal.hide();
+    }
+
+
+    // This function for Show All Users in Dropdown box...
+    $(document).ready(function () {
+        debugger;
+        fetchDropdownOptions();
+    })
+
+    function fetchDropdownOptions() {
+        debugger;
+        $.ajax({
+            url: '/CompanyAdmin/Document/ShowUserList',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                debugger;
+                console.log(data.userlist);
+                populateDropdown('#groupList', data.userlist);
+            },
+            error: function (error) {
+                console.error(error.statusText);
+            }
+        });
+    }
+
+    function populateDropdown(selector, options) {
+        debugger;
+        var dropdown = $(selector);
+        dropdown.empty();
+        dropdown.append('<option disabled selected>Select an option</option>');
+
+        // Populate options
+        $.each(options, function (index, option) {
+            debugger;
+            dropdown.append($('<option>', {
+                value: option.value,
+                text: option.text
+            }));
+        });
+
+        // Set the selected value as the default option
+        dropdown.val(dropdown.data('selected-value'));
+    }
+
+
+</script>

@@ -1,0 +1,398 @@
+﻿@{
+    ViewData["Title"] = "FileTypeMetaDataIndex";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Define the CSS styles here *@
+@{
+    <text>
+        <style>
+            .dataTables_wrapper .sorting_asc:before,
+            .dataTables_wrapper .sorting_asc:after,
+            .dataTables_wrapper .sorting_desc:before,
+            .dataTables_wrapper .sorting_desc:after,
+            .dataTables_wrapper .sorting:before,
+            .dataTables_wrapper .sorting:after {
+                margin-top: 0.4rem;
+                /*Adjust the margin-top value as needed */
+            }
+
+            table.dataTable thead .sorting:nth-child(3):before,
+            table.dataTable thead .sorting_asc:nth-child(3):before,
+            table.dataTable thead .sorting_desc:nth-child(3):before,
+            table.dataTable thead .sorting:nth-child(3):after,
+            table.dataTable thead .sorting_asc:nth-child(3):after,
+            table.dataTable thead .sorting_desc:nth-child(3):after {
+                content: none;
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                width: 4.5em !important;
+            }
+            /* Add a search icon */
+            /*            .dataTables_wrapper::before {
+                                        right: 4%;
+                                        top: 12%;
+                                    }*/
+            /* Style for the modal */
+            .modal-content {
+                border: 4px solid #2274A5; /* Blue border */
+                border-radius: 5px;
+                padding: 20px;
+            }
+
+            /* Style for the modal header */
+            .modal-header {
+                background-color: #2274A5; /* Blue background color */
+                color: #fff; /* White text color */
+                border-bottom: 2px solid #2274A5; /* Blue border at the bottom of the header */
+                border-radius: 5px 5px 0 0; /* Rounded corners at the top */
+            }
+
+            /* Style for the modal body (your form) */
+            .modal-body {
+                padding: 20px;
+            }
+
+            /* Style for the modal footer (if you have one) */
+            .modal-footer {
+                background-color: #f1f1f1; /* Light gray background color */
+                border-top: 2px solid #2274A5; /* Blue border at the top of the footer */
+                border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+            }
+
+            /* Style for the close button (the "X" button in the header) */
+            .btn-close {
+                color: #fff; /* White text color for the close button */
+            }
+
+            .red-close-button {
+                color: #9F0F0F; /* Change the text color to red */
+            }
+            /* Style for the UPDATE button */
+            .btn-update {
+                background-color: #2274A5;
+                color: #fff;
+            }
+
+            /* Style for the CANCEL button */
+            .btn-cancel {
+                background-color: #A47A15;
+                color: #fff;
+            }
+
+            .btn-save {
+                background-color: #1B998B;
+                color: #fff;
+            }
+
+            /* Hover effect for both buttons (optional) */
+            .btn-update:hover,
+            .btn-cancel:hover {
+                opacity: 0.8;
+                transition: opacity 0.3s;
+            }
+
+        </style>
+    </text>
+}
+
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">FILE TYPE LIST</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tblData" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">FILE NAME</th>
+                                <th class="wd-15p border-bottom-0">METADATA NAME</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+                            <div class="col-auto">
+                                <button onclick="exportExcel()" class="btn btn-sm btn-link btn-excell"
+                                        title="Export Excel" data-bs-placement="top" style="color: #1B998B;">
+                                    <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-link btn-pdf" style="color: #9F0F0F;"
+                                        title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 15px;"></i>
+                                </button>
+                            </div>
+
+                            <div class="col-auto">
+                                @*                                <a href="#" class="btn btn-sm btn-link text-success btn-add" data-bs-toggle="modal"
+                                title="Add FileType MetaData" data-bs-placement="top" data-bs-original-title="Add File Type MetaData" data-bs-target="#addFileNameTypeModal">
+                                <i class="fa fa-plus-circle plus-icon" style="font-size: 15px;"></i>
+                                </a>*@
+                                <a href="#" class="btn btn-sm btn-link  btn-add" data-bs-toggle="modal"
+                                   title="Add FileType MetaData" data-bs-placement="top" data-bs-original-title="Add File Type MetaData" data-bs-target="#addFileNameTypeModal"
+                                   style="color: #1B998B;">
+                                    <i class="fa fa-plus-circle plus-icon" style="font-size: 16px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Start Here - Add New FileName Type Modal *@
+<div id="addFileNameTypeModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document" style="height: 600px; max-width: 1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">CREATE NEW FILENAME TYPE</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="addFileTypeForm" action="/CompanyAdmin/Document/CreateFileTypeDocument" method="post">
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="FileName" class="col-sm-4 col-form-label" style="padding-right: 0;">FILENAME:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="fileName" name="FileName" class="form-control" style="margin-bottom: 0;" oninput="handleFileNameInput(this)">
+                                <span id="fileNameError" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="MetaData">SELECT METADATA FOR AUTOMATIC FILENAME</label>
+                            <div>
+                                <p class="fade-text">
+                                    Select metadata from the list by clicking on + icon.
+                                </p>
+                            </div>
+                            <span id="MetaDataError" class="error-message" style="color: #9F0F0F;"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-8">&nbsp;&nbsp; METADATA NAME</th>
+                                                <th class="col-2 text-center align-middle">SEPERATOR</th>
+                                                <th class="col-1 text-center align-middle">DELETE</th>
+                                                <th class="col-1 text-center align-middle">ADD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Meta-Data">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-save" id="saveFileTypeButton">SAVE</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Add New FileName Type Modal *@
+
+@* Start Here - Edit FileName Type Modal *@
+<div id="editFileNameTypeModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document" style="height: 600px; max-width: 1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">EDIT FILENAME TYPE</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="editFileTypeForm" action="/CompanyAdmin/Document/EditFileTypeDoc" method="post">
+                    <input type="hidden" id="id" name="id" />
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="FileName" class="col-sm-4 col-form-label" style="padding-right: 0;">FILENAME NAME:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="fileName1" name="FileName" class="form-control" style="margin-bottom: 0;" />
+                                <span id="fileNameError1" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="MetaData">SELECT METADATA FOR AUTOMATIC FILENAME</label>
+                            <div>
+                                <p class="fade-text">
+                                    Select metadata from the list by clicking on + icon.
+                                </p>
+                            </div>
+                            <span id="updateMetaDataError" class="error-message" style="color: #9F0F0F;"></span>
+                        </div>
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-8">&nbsp;&nbsp; METADATA NAME</th>
+                                                <th class="col-2 text-center align-middle">SEPERATOR</th>
+                                                <th class="col-1 text-center align-middle">DELETE</th>
+                                                <th class="col-1 text-center align-middle">ADD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Update-Meta-Data">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-update" id="updateFileTypeButton">UPDATE</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Edit FileName Type Modal *@
+
+<!--Add New Case Metadata Modal -->
+<div class="modal fade" id="metadata-modal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+    <div id="gradient"></div>
+    <div class="modal-dialog metadata-dialog" role="document">
+        <div class="modal-content metadata-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="metadata-modal-title">SELECT METADATA</h5>
+                @*<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body metadata-body">
+                <div class="mb-2" style="display: flex; justify-content: right;">
+                    <label class="m-2" for="metadataSearchInput">Search :</label>
+                    <input type="text" class="form-data metadataSearchInput" id="metadataSearchInput" placeholder="Search metadata..." />
+                    <div id="searchIcon" style="position: absolute; top: 10.5%; transform: translateY(-50%); right: 25px;">
+                        <i class="fa fa-search"></i>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">METADATA NAME</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metadataTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer metadata-footer" style="display: flex;justify-content: center;">
+                @*<button type="button" class="btn btn-primary" data-bs-toggle="modal" title="Import MetaData" data-bs-placement="top"
+                data-bs-original-title="Import MetaData" data-bs-target="#importMetaDataModal">
+                IMPORT
+                </button>*@
+                <button type="button" class="btn btn-save col-4" onclick="addMetadata('add')">ADD METADATA</button>
+                <button type="button" class="btn btn-cancel col-4" data-bs-dismiss="modal">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="importMetaDataModal" tabindex="-1" role="dialog" aria-labelledby="importMetaDataLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importMetaDatalLabel">IMPORT METADATA</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="metaDataForm" method="post" enctype="multipart/form-data">
+                    <div class="form-group cf2">
+                        <label for="metaDataFile">Upload CSV File:</label>
+                        <input type="file" id="metaDataFile" name="metaDataFile" accept=".csv,.xlsx,.xls">
+                        <small class="text-muted">Please upload a CSV file containing the user data.</small>
+                    </div>
+                    <!-- Additional form fields for bulk user data, if needed -->
+                </form>
+                <p>Download the <a href="/assets/files/">demo Excel sheet</a> for reference.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Import MetaData</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update case Metadata Modal -->
+<div class="modal fade" id="updateMetadata-modal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+    <div id="gradient"></div>
+    <div class="modal-dialog metadata-dialog" role="document">
+        <div class="modal-content metadata-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateMetadata-modal-title">SELECT METADATA</h5>
+                @*<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body metadata-body">
+                <div class="mb-2" style="display: flex; justify-content: right;">
+                    <label class="m-2" for="metadataSearchInput">Search :</label>
+                    <input type="text" class="form-data metadataSearchInput" id="updateMetaDataSearchInput" placeholder="Search metadata..." />
+                    <div id="updateSearchIcon" style="position: absolute; top: 10.5%; transform: translateY(-50%); right: 25px;">
+                        <i class="fa fa-search"></i>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">METADATA NAME</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="updateMetaDataTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer metadata-footer" style="display: flex;justify-content: center;">
+                <button type="button" class="btn btn-save col-4" onclick="addMetadata('update')">ADD METADATA</button>
+                <button type="button" class="btn btn-cancel col-4" data-bs-dismiss="modal">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/FileTypeDocument.js"></script>
+    <script src="~/adminAssets/assets/plugins/notify/js/notifIt.js"></script>
+}

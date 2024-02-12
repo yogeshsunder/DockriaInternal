@@ -1,0 +1,282 @@
+@using Domain.Model;
+
+@{
+    <text>
+        <style>
+            .logo-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 6.5rem;
+            }
+
+            .side-menu__item.no-pointer-events {
+                pointer-events: none;
+            }
+        </style>
+
+
+    </text>
+}
+
+<body class="app sidebar-mini ltr">
+    <div class="sticky">
+        <div class="app-sidebar__overlay" data-bs-toggle="sidebar"></div>
+        <div class="app-sidebar">
+            <div class="side-header">
+                <div class="logo-container">
+                    <a class="header-brand1" href="@Url.Action("CampanyLogo", "Profile", new { area = "ProfileManagement" })">
+                        <img src="@Url.Action("GetLogoImage", "Profile", new { area = "ProfileManagement" })"
+                             class="header-brand-img main-logo" alt="Company logo" style="height: 4.5rem; width: 6.5rem; margin-left: 3rem;" id="logo1" />
+                    </a>
+                </div>
+                <div class="logo-container">
+                    <a class="header-brand1" href="@Url.Action("CampanyLogo", "Profile", new { area = "ProfileManagement" })">
+                        <img src="@Url.Action("GetIconImage", "Profile", new { area = "ProfileManagement" })" class="header-brand-img main-logo" alt="Company Icon" style="height: 3.5rem; display: none;" id="logo2" />
+                    </a>
+                </div>
+            </div>
+            <div class="main-sidemenu">
+                <div class="slide-left disabled" id="slide-left">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
+                    </svg>
+                </div>
+                <ul class="side-menu">
+                    <li class="slide">
+                        <a class="side-menu__item has-link no-pointer-events" data-bs-toggle="slide" href="javascript:void(0)" onclick="return handleDashboardClick()">
+                            <i class="side-menu__icon ri-home-4-line"></i>
+                            <span class="side-menu__label">Dashboard</span>
+                        </a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="side1">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">Dashboard</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fas fa-user-cog"></i><span class="side-menu__label">User Management</span><i class="angle fe fe-chevron-right"></i>
+                        </a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="side17">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">User Management</a></li>
+                                                <li>
+                                                    <a asp-area="CompanyAdmin" asp-controller="CompanyAdmin" class="slide-item" asp-action="Index">
+                                                        Users
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="CompanyAdmin" asp-controller="UserGroup" class="slide-item" asp-action="Index">
+                                                        Groups
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="CompanyAdmin" asp-controller="GroupPermission" class="slide-item" asp-action="Index">
+                                                        Permissions
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="CompanyAdmin" asp-controller="GroupPermission" class="slide-item" asp-action="Details">
+                                                        Update Permissions
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon ri-pages-line"></i><span class="side-menu__label">Document Management</span><i class="angle fe fe-chevron-right"></i>
+                        </a>
+                        <ul class="slide-menu">
+                            <li class="sidemenu-list" style="margin-left: 24px;">
+                                <a asp-area="CompanyAdmin" asp-controller="Document" class="slide-item" asp-action="FileTypeMetaDataIndex">
+                                    Auto Name
+                                </a>
+                            </li>
+                            <li class="sidemenu-list" style="margin-left: 24px;">
+                                <a asp-area="CompanyAdmin" asp-controller="Document" class="slide-item" asp-action="DocumentMetaDataIndex">
+                                    Document
+                                </a>
+                            </li>
+                            <li class="sidemenu-list" style="margin-left: 24px;">
+                                <a asp-area="CompanyAdmin" asp-controller="Document" class="slide-item" asp-action="MetaDataTypeIndex">
+                                    MetaData
+                                </a>
+                            </li>
+                            <li class="sidemenu-list" style="margin-left: 24px;">
+                                <a asp-area="CompanyAdmin" asp-controller="ContainerType" class="slide-item" asp-action="ContainerIndex">
+                                    Container
+                                </a>
+                            </li>
+                            <li class="sidemenu-list" style="margin-left: 24px;">
+                                <a asp-area="CompanyAdmin" asp-controller="FolderView" class="slide-item" asp-action="Index">
+                                    Folder View
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fas fa-folder"></i><span class="side-menu__label">Workflows</span><i class="angle fe fe-chevron-right"></i>
+                        </a>
+                        <ul class="slide-menu">
+                            <li class="sidemenu-list" style="margin-left: 24px;">
+                                <a asp-area="CompanyAdmin" asp-controller="Workflow" class="slide-item" asp-action="Index">
+                                    Workflow
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    <li class="slide">
+                        <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)">
+                            <i class="side-menu__icon fe fe-log-out"></i><span class="side-menu__label">Sign Out</span><i class="angle fe fe-chevron-right"></i>
+                        </a>
+                        <ul class="slide-menu">
+                            <li class="panel sidetab-menu">
+                                <div class="panel-body tabs-menu-body p-0 border-0">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="side25">
+                                            <ul class="sidemenu-list">
+                                                <li class="side-menu-label1"><a href="javascript:void(0)">Sign Out</a></li>
+                                                <li>
+                                                    <form class="admin-logout dropdown-item text-dark fw-semibold" asp-area="Identity" asp-page="/Account/Logout"
+                                                          asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" style="margin-left: 0.8em;">
+                                                        <button type="submit" class="nav-link btn btn-link text-danger" style="color: #000; font-weight: 700;">
+                                                            <i class="dropdown-icon fe fe-log-out text-danger" style="font-size: 24px;"></i> Sign out
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="slide-right" id="slide-right">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    .tab-content {
+        display: flex;
+        justify-content: center;
+    }
+
+    .sidemenu-list li {
+        text-align: center;
+    }
+
+    .panel-body {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .left-side {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+    }
+
+        .left-side li {
+            padding: 10px 0;
+        }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Add an id to the sidebar toggle button -->
+
+<script>
+    var logo1Visible = true;
+
+    // Function to toggle logo and icon images
+    function toggleLogo() {
+        var logo1 = document.getElementById("logo1");
+        var logo2 = document.getElementById("logo2");
+
+        if (logo1Visible) {
+            logo1.style.display = "none";
+            logo2.style.display = "block";
+        } else {
+            logo1.style.display = "block";
+            logo2.style.display = "none";
+        }
+
+        logo1Visible = !logo1Visible;
+    }
+
+    // Function to handle sidebar toggle button click
+    function handleSidebarToggleClick() {
+        // Toggle between logo and icon images
+        toggleLogo();
+    }
+
+    function handleDashboardClick() {
+        // Prevent further action for the Dashboard menu item
+        // You can add additional logic here if needed
+        return false;
+    }
+
+    // Function to update logo and icon images
+    function updateImages(logoSrc, iconSrc) {
+        var logoImage = document.getElementById('logo1');
+        var iconImage = document.getElementById('logo2');
+
+        // Initially, hide the icon
+        iconImage.style.display = 'none';
+
+        // Update logo image
+        if (logoSrc) {
+            logoImage.src = logoSrc;
+            logoImage.style.display = 'block';
+        } else {
+            // If no logo, display a default logo
+            logoImage.src = '~/assets/img/defaultLogo.png';
+            logoImage.style.display = 'block';
+        }
+
+        // Update icon image
+        if (iconSrc) {
+            iconImage.src = iconSrc;
+        }
+    }
+
+    // Call this function with the appropriate image sources
+    updateImages(
+        "@Url.Action("GetLogoImage", "Profile", new { area = "ProfileManagement" })",
+        "@Url.Action("GetIconImage", "Profile", new { area = "ProfileManagement" })"
+    );
+
+    // Add click event listener to the sidebar toggle button
+    document.getElementById("sidebar-toggle").addEventListener("click", handleSidebarToggleClick);
+
+</script>

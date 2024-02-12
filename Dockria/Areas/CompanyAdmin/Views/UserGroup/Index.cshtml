@@ -1,0 +1,266 @@
+﻿@model Domain.Model.Documents
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Define the CSS styles here *@
+@{
+    <text>
+        <style>
+
+            table.dataTable thead .sorting:nth-child(2):before,
+            table.dataTable thead .sorting_asc:nth-child(2):before,
+            table.dataTable thead .sorting_desc:nth-child(2):before,
+            table.dataTable thead .sorting:nth-child(2):after,
+            table.dataTable thead .sorting_asc:nth-child(2):after,
+            table.dataTable thead .sorting_desc:nth-child(2):after {
+                content: none;
+            }
+
+            .dataTables_wrapper input[type="search"] {
+                width: 12em !important;
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                width: 4.5em !important;
+            }
+            /* Add a search icon */
+            .dataTables_wrapper::before {
+                right: 38px;
+                top: 13.5%;
+            }
+
+            .modal-content {
+                border: 4px solid #2274A5; /* Blue border */
+                border-radius: 5px;
+                padding: 20px;
+            }
+
+            /* Style for the modal header */
+            .modal-header {
+                background-color: #2274A5; /* Blue background color */
+                color: #fff; /* White text color */
+                border-bottom: 2px solid #2274A5; /* Blue border at the bottom of the header */
+                border-radius: 5px 5px 0 0; /* Rounded corners at the top */
+            }
+
+            /* Style for the modal body (your form) */
+            .modal-body {
+                padding: 20px;
+            }
+
+            /* Style for the modal footer (if you have one) */
+            .modal-footer {
+                background-color: #f1f1f1; /* Light gray background color */
+                border-top: 2px solid #2274A5; /* Blue border at the top of the footer */
+                border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+            }
+
+            /* Style for the close button (the "X" button in the header) */
+            .btn-close {
+                color: #fff; /* White text color for the close button */
+            }
+
+            .red-close-button {
+                color: #9F0F0F; /* Change the text color to red */
+            }
+
+            /* Style for the UPDATE button */
+            .btn-update {
+                background-color: #2274A5;
+                color: #fff;
+            }
+
+            /* Style for the CANCEL button */
+            .btn-cancel {
+                background-color: #A47A15;
+                color: #fff;
+            }
+
+                /* Hover effect for both buttons (optional) */
+                .btn-update:hover,
+                .btn-cancel:hover {
+                    opacity: 0.8;
+                    transition: opacity 0.3s;
+                }
+
+            <style >
+            .custom-button {
+                color: #1B998B;
+            }
+        </style>
+
+        </style>
+    </text>
+}
+
+<br />
+<div class="row">
+    <div class=" col-md-6 offset-sm-3">
+        <div class="card" style="border: 4px solid #2274A5;">
+            <div class="card-header">
+                <h3 class="card-title"><b>USER GROUPS</b></h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="addRowData" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Group Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+                            <br />
+                            <div class="col-auto">
+                                <button onclick="exportExcel()" class="btn btn-sm btn-link btn-excell"
+                                        title="Export Excel" data-bs-placement="top" style="color:  #1B998B;">
+                                    <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-link btn-pdf" style="color: #9F0F0F;"
+                                        title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 15px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <a href="#" class="btn btn-sm btn-link  btn-add" data-bs-toggle="modal" data-toggle="tooltip"
+                                   title="Add User" data-bs-placement="top" data-bs-original-title="Add User" data-bs-target="#addUserModal"
+                                   style="color: #1B998B;">
+                                    <i class="fa fa-plus-circle plus-icon" style="font-size: 16px;"></i>
+                                </a>
+                                @*                                <a href="#" class="btn btn-sm btn-link text-success btn-add" data-bs-toggle="modal"
+                                title="Add Group" data-bs-placement="top" data-bs-original-title="Add User" data-bs-target="#addUserModal">
+                                <i class="fa fa-plus-circle plus-icon" style="font-size: 15px;"></i>
+                                </a>*@
+                            </div>
+                        </div>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Start Here - Update User Group Modal *@
+<div id="editUserModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">EDIT COMPANY USER</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="updateUserForm" action="/CompanyAdmin/UserGroup/EditgroupUser" method="post">
+                    <input type="hidden" id="UserGroupId" name="UserGroupId" />
+                    <div class="form-group">
+                        <label for="UserGroupName">Group Name</label>
+                        <input type="text" id="groupname" class="form-control" required>
+
+                        <span id="" class="error-message" style="color:#9F0F0F;"></span>
+
+                        <span id="groupError" class="error-message" style="color:#9F0F0F;"></span>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="userList">User List</label>
+                        <div class="user-list-box">
+                            <div class="search-wrapper">
+                                <input type="text" id="userSearchInput1" class="form-control search-input" placeholder="Search..." />
+                                <br />
+                            </div>
+                            <div class="user-list1">
+                                <!-- Checkbox options will be dynamically populated here -->
+                            </div>
+                        </div>
+                        <span id="userGroupError" class="error-message" style="color:#9F0F0F;"></span>
+                    </div>
+                </form>
+                <div id="errorMessageContainer" class="text-danger"></div> <!-- Error message container -->
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button id="updategroupUserBtn" class="btn btn-update btn-lg" type="button" style="background-color: #2274A5; color: white;">UPDATE</button>
+                    <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal" style="background-color: #A47A15; color: white;">CANCEL</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Update User Group Modal *@
+
+@* Start Here - Add New User Group Modal *@
+<div id="addUserModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">ADD COMPANY USER</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="addUserForm" action="/CompanyAdmin/UserGroup/CreateGroup" method="post">
+                    <div class="form-group">
+                        <label for="GroupName" style="font-weight: bold;">User Group Name</label>
+                        <input type="text" id="GroupName" class="form-control" name="UserGroupName">
+                        <span id="groupError1" class="error-message" style="color:#9F0F0F;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="userList">User List</label>
+                        <div class="user-list-box">
+                            <div class="search-wrapper">
+                                <input type="text" id="userSearchInput" class="form-control search-input" placeholder="Search..." />
+                                <br />
+                            </div>
+                            <div class="user-list">
+                                <!-- Checkbox options will be dynamically populated here -->
+                            </div>
+                        </div>
+                        <span id="userGroupError1" class="error-message" style="color:#9F0F0F;"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    @*                    <button type="button" class="btn btn-save btn-lg" id="addUserSubmitButton">ADD</button>
+                    <button type="button" class="btn btn-danger btn-lg" data-bs-dismiss="modal">CANCEL</button>*@
+                    <button type="button" class="btn btn-save" onclick="submitForm" id="addUserSubmitButton" style="background-color: #1B998B; color: #fff;">Add</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" style="background-color: #A47A15; color: #fff;">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Add New User Group Modal *@
+
+<div id="errorModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/UserGroup.js"></script>
+}

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Domain.Model.ViewModel.smgViewModel>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card-header bg-info-gradient text-white bubble-shadow">
+    <h5 style="text-align:center;">SUBSCRIPTION MANAGEMENT PANEL</h5>
+</div>
+<br />
+<br />
+<div id="admin-container" class="row">
+    <div id="admin-list" class="col-md-3">
+        @await Html.PartialAsync("_smgList", Model)
+    </div>
+
+
+    <div class="col-md-4">
+        @await Html.PartialAsync("_smgInfo",new Domain.Model.ViewModel.smgViewModel())
+    </div>
+    <div class="col-md-5">
+        @await Html.PartialAsync("_smgCost",new Domain.Model.ViewModel.SmgCost())
+    </div>
+
+</div>
+
+<div class="col-md-9 p-0" style="margin-left:15%;margin-right:5px;margin-top:5px">
+    <div class="row">
+        <input type="submit" id="createSmgButton" onclick="onAddClick('#addsmgForm')" class="btn text-white btn-rounded" value="CREATE NEW SMG" style="background-color:red;" />
+        <button type="submit" id="deleteSmgButton" onclick="deleteSmgList('#addsmgForm')" class="btn text-white btn-rounded" style="background-color:red; margin-left:5px">DELETE SMG</button>&nbsp;
+        <input type="submit" id="clearFormButton" class="btn text-white btn-rounded" value="CLEAR FORM" style="background-color:red;margin-right:0.2em" />
+        <input type="button" id="updateSmgListButton" onclick="updateSmgList('#addsmgForm')" value="UPDATE FULL SMG" class="btn text-white btn-rounded" style="background-color:red;" />
+
+@*        <button type="submit" id="updateInfoButton" class="btn text-white btn-rounded" style="background-color:red; margin-left:5px">UPDATE INFO</button>&nbsp;
+        <input type="submit" id="updateCostButton" onclick="updateCostform('#addsmgForm')" class="btn text-white btn-rounded" value="UPDATE COST" style="background-color:red;" />*@
+    </div>
+    <br />
+</div>
+
+
+
+
+
+@section scripts {
+
+@*    <script>
+        // Function to clear the form fields
+        function clearForm(formId) {
+            $(formId)[0].reset();
+        }
+
+        // Attach a click event listener to the "CLEAR FORM" button
+        $(document).ready(function () {
+            $('#clearFormButton').on('click', function () {
+                clearForm('#addsmgForm');
+                clearForm('#addsmgCostForm');
+            });
+        });
+    </script>*@
+    <script src="~/js/SmgGroup.js"></script>
+}

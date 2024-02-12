@@ -1,0 +1,175 @@
+﻿<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="Sparic – ASP.NET Mvc5 Multipurpose Responsive admin Template" name="description">
+    <meta content="Spruko Technologies Private Limited" name="author">
+    <meta name="keywords" content="mvc bootstrap templates, dotnet core mvc, asp net core admin template, asp dotnet template, asp dot net core mvc, mvc admin template, asp net core, admin panel asp dotnet, bootstrap admin template, admin dashboard template, asp net mvc core admin dashboard template, bootstrap admin panel, mvc dashboard template, dashboard mvc template, admin panel bootstrap, asp.net admin dashboard template">
+
+    <!-- Favicon -->
+    <link rel="icon" href="~/assets/img/icon.ico" type="image/x-icon" />
+    @*<link rel="icon" href="~/adminAssets/assets/images/brand/favicon.ico" type="image/x-icon">*@
+    @*<link rel="shortcut icon" type="image/x-icon" href="~/adminAssets/assets/images/brand/favicon.ico">*@
+
+    <!-- Title -->
+    <title>Docria</title>
+
+    <!--Bootstrap.min css-->
+    <link id="style" rel="stylesheet" href="~/adminAssets/assets/plugins/bootstrap/css/bootstrap.min.css">
+
+    <!-- Style css -->
+    <link href="~/adminAssets/assets/css/style.css" rel="stylesheet" asp-append-version="true">
+
+    <!-- Plugin css -->
+    <link href="~/adminAssets/assets/css/plugins.css" rel="stylesheet" asp-append-version="true">
+
+    <!-- Animate css -->
+    <link href="~/adminAssets/assets/css/animated.css" rel="stylesheet" asp-append-version="true">
+
+    <!---Icons css-->
+    <link href="~/adminAssets/assets/css/icons.css" rel="stylesheet" asp-append-version="true">
+    
+    <script src="~/assets/js/plugin/chart.js/chart.min.js"></script>
+    @* @RenderSection("Css",false/*required*/) *@
+    @await RenderSectionAsync("Css", required: false)
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="~/adminassets/css/customadminstyles.css" type="text/css" rel="stylesheet" />
+
+    <!-- These dependencies to the head section for your css and javascript working of dropdown menu of your HTML Head file -->
+  @*  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>*@
+
+    @*Third Party CSS REFFERENCES*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    @*  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-***********" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-xxx" crossorigin="anonymous" />
+*@
+</head>
+
+<body class="app sidebar-mini ltr">
+
+    <!--Global-Loader-->
+    <div id="global-loader">
+        <img src="~/adminAssets/assets/images/loader.svg" alt="loader">
+    </div>
+
+    <div class="page">
+        <div class="page-main">
+
+            <!-- app header code -->
+            <partial name="~/Views/Shared/Admin/_AdminHeader.cshtml" />
+            <!-- End app header Code -->
+            <!-- app sidebar Code -->
+            <partial name="~/Views/Shared/Admin/_AdminSidebar.cshtml" />
+            <!-- End app sidebar Code -->
+            <!-- app-content-->
+            <div class="main-content app-content" style="margin-top:0">
+                <div class="side-app">
+                    <!-- container -->
+                    <div class="main-container container-fluid">
+
+                        @RenderBody()
+
+                    </div>
+                    <!-- container end -->
+                </div>
+            </div>
+            <!-- End app-content-->
+        </div>
+
+        <!-- Footer opened -->
+        <partial name="~/Views/Shared/Admin/_AdminFooter.cshtml" />
+        <!--  End Footer closed -->
+
+    </div>
+    <!-- page closed -->
+    <!-- Back to top -->
+    <a href="#top" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+
+    <!-- Jquery js-->
+    <script src="~/adminAssets/assets/js/vendors/jquery.min.js"></script>
+
+    <!--Bootstrap.min js-->
+    <script src="~/adminAssets/assets/plugins/bootstrap/popper.min.js"></script>
+    <script src="~/adminAssets/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Chart Circle js-->
+    <script src="~/adminAssets/assets/js/vendors/circle-progress.min.js"></script>
+
+    <!--Moment js-->
+    <script src="~/adminAssets/assets/plugins/moment/moment.min.js"></script>
+
+    <!--News Ticker js-->
+    <script src="~/adminAssets/assets/plugins/newsticker/breaking-news-ticker.min.js"></script>
+    <script src="~/adminAssets/assets/plugins/newsticker/newsticker.js"></script>
+
+    <!--Side-menu js-->
+    <script src="~/adminAssets/assets/plugins/sidemenu/sidemenu.js"></script>
+
+    <!-- Perfect scroll bar js-->
+    @*<script src="~/adminAssets/assets/plugins/p-scroll/perfect-scrollbar.js"></script>
+    <script src="~/adminAssets/assets/plugins/p-scroll/pscroll.js"></script>*@
+
+    <!-- Rightsidebar js -->
+    <script src="~/adminAssets/assets/plugins/sidebar/sidebar.js"></script>
+
+    @* @RenderSection("Scripts",false/*required*/) *@
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Color Theme js -->
+    <script src="~/adminAssets/assets/js/themeColors.js"></script>
+
+    <!-- Switcher-Styles js -->
+    <script src="~/adminAssets/assets/js/switcher-styles.js"></script>
+
+    <!-- Custom js-->
+    <script src="~/adminAssets/assets/js/custom.js"></script>
+
+    <!-- Sticky js -->
+    <script src="~/adminAssets/assets/js/sticky.js"></script>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+
+    <!-- GALLERY JS -->
+    <script src="~/adminAssets/assets/plugins/gallery/picturefill.js"></script>
+    <script src="~/adminAssets/assets/plugins/gallery/lightgallery.js"></script>
+    <script src="~/adminAssets/assets/plugins/gallery/lightgallery-1.js"></script>
+    <script src="~/adminAssets/assets/plugins/gallery/lg-pager.js"></script>
+    <script src="~/adminAssets/assets/plugins/gallery/lg-autoplay.js"></script>
+    <script src="~/adminAssets/assets/plugins/gallery/lg-fullscreen.js"></script>
+    <script src="~/adminAssets/assets/plugins/gallery/lg-zoom.js"></script>
+    <script src="~/adminAssets/assets/plugins/gallery/lg-hash.js"></script>
+    <script src="~/adminAssets/assets/plugins/gallery/lg-share.js"></script>
+
+    @*Third Party JS REFFERENCES*@
+    <script src="~/adminassets/assets/plugins/datatable/js/buttons.bootstrap5.min.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/js/jszip.min.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/js/buttons.print.min.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/js/buttons.html5.min.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/js/buttons.colvis.min.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/js/jquery.datatables.min.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/js/datatables.bootstrap5.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/js/datatables.buttons.min.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/datatables.responsive.min.js"></script>
+    <script src="~/adminassets/assets/plugins/datatable/responsive.bootstrap5.min.js"></script>
+    <script src="~/adminassets/assets/js/table-data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://kit.fontawesome.com/e19c476714.js"></script>
+
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js" integrity="sha512-***********" crossorigin="anonymous"></script>
+*@
+
+</body>
+</html>

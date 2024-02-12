@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Domain.Model.ViewModel.smgViewModel>
+
+
+@if (Model == null)
+{
+    <div class="alert alert-danger">
+        Error: Model is null.
+    </div>
+}
+else if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No Smgs found.
+    </div>
+}
+else
+{
+
+
+    <div style="margin-left:8px;">
+        <table class="table table-bordered table-head-bg-info table-bordered-bd-info w-100" style="border: 4px solid #2274A5;">
+            <thead>
+                <tr class="table table-bordered table-bordered-bd-warning mt-4">
+                    <th colspan="3">LIST OF ALL SMG</th>
+                </tr>
+                <tr>
+
+                    <th scope="row" class="text-center">SMG NAME</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+
+                        <td class="text-center">@Html.DisplayFor(modelItem => item.SmgName)</td>
+                        <td class="text-center">
+                            <input type="submit" value="Edit" class="btn btn-success btn-sm d-inline btn-block edit-user" data-id="@item.Id" onclick="updateSmg(@item.Id)" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+

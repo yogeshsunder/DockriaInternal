@@ -1,0 +1,37 @@
+﻿@import url(https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900);
+
+.sidebar_minimize .sidebar-content > ul > li > a.sidebar-text,
+.sidebar_minimize .logout-button {
+    visibility: hidden !important;
+    text-align: center;
+}
+
+    .sidebar_minimize .sidebar-content > ul > li > a i,
+    .sidebar_minimize .logout-button i {
+        visibility: visible !important;
+    }
+
+.sidebar_minimize .sidebar-content:hover > ul > li > a.sidebar-text,
+.sidebar_minimize .sidebar-content:hover > ul > li > form > button.sidebar-text {
+    visibility: visible !important;
+}
+
+.sidebar-content {
+    padding-bottom:10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    height: 100%;
+}
+
+.logout-button {
+    margin-top: auto;
+    vertical-align: middle;
+}
+.icon-with-space {
+    margin-right: 15px; /* Adjust the margin as needed */
+}
+
+
+
+

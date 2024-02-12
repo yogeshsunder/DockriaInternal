@@ -1,0 +1,152 @@
+﻿@model Domain.Model.ViewModel.SmgCost
+
+
+
+<div id="addSmgCostModal" style="margin-right:5px;">
+    <table class="table table-bordered table-head-bg-info table-bordered-bd-info w-100" style="border: 4px solid #2274A5;">
+        <thead>
+            <tr class="table table-bordered table-bordered-bd-warning mt-4">
+                <th colspan="3" style="text-align: center;">SMG COST</th>
+            </tr>
+        </thead>
+    </table>
+
+
+    <form id="addsmgCostForm" style="border: 4px solid #2274A5; margin-top:-10px;">
+        <div class="form-row cart-row">
+
+            <input hidden asp-for="@Model.Id" type="text" class="cart-id" name="id[]" />
+            <div class="col-md-5" style="margin-left:15px;">
+                <fieldset>
+                    <br />
+                    <label>Description</label>
+                    <input asp-for="@Model.Description" type="text" class="form-control form-control-sm description" name="description[]">
+                    <span asp-validation-for="@Model.Description" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="col">
+                <fieldset>
+                    <br />
+                    <label>Qty</label>
+                    <input asp-for="@Model.Qty" type="text" class="form-control form-control-sm qty" name="qty[]">
+                    <span asp-validation-for="@Model.Qty" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="col">
+                <fieldset>
+                    <br />
+                    <label>Cost</label>
+                    <input asp-for="@Model.Cost" type="text" class="form-control form-control-sm cost" name="cost[]">
+                    <span asp-validation-for="@Model.Cost" class="text-danger"></span>
+                </fieldset>
+            </div>
+            <div class="col">
+                <fieldset>
+                    <br />
+                    <label>Total</label>
+                    <input type="text" class="form-control form-control-sm total" readonly name="total[]">
+                </fieldset>
+            </div>
+        </div>
+        <br />
+        <div id="productLines">
+            <!-- Existing product lines will be inserted here -->
+        </div>
+        <div class="form-row">
+            <div class="col" style="margin-left:15px;">
+                <a href="#" class="small mt-1" id="addProduct">Add Product or Services</a>
+            </div>
+        </div>
+        <br>
+        @*      <br>*@
+
+        @*        <br>
+
+        <div class="d-flex justify-content-end align-items-center">
+        <label for="sub">SUBTOTAL</label>
+        <div>
+        <input type="text" id="sub-total" class="form-control form-control-sm" readonly>
+        </div>
+        </div>*@
+        @*        <br>
+        <div class="d-flex justify-content-end align-items-center" style="margin-left:15px;">
+        <label for="vat-percentage">VAT Percentage</label>
+        <input type="text" class="form-control form-control-sm" id="vat-percentage">
+        </div>
+        <br>
+        <div class="d-flex justify-content-end align-items-center">
+        <label for="vat">VAT</label>
+        <div>
+        <input type="text" id="vat" class="form-control form-control-sm" readonly>
+        </div>
+        </div>
+        <br>*@
+        <div class="d-flex justify-content-end align-items-center">
+            <label for="sub">GRAND TOTAL</label>
+            <div>
+                <input type="text" id="grand-total" class="form-control form-control-sm" readonly>
+            </div>
+        </div>
+
+        <br />
+
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Event listener for qty and cost input fields
+        $(document).on('input', '.qty, .cost', function () {
+            calculateTotal();
+        });
+
+        // Event listener for VAT percentage input field
+        $('#vat-percentage').on('input', function () {
+            calculateTotal();
+        });
+
+        // Add Product or Services click event
+        $('#addProduct').click(function (e) {
+            e.preventDefault();
+
+            // Your code to add a new row or perform any desired action
+
+            // Clone the first product line and append it to the productLines div
+            var newProductLine = $('.form-row:first').clone();
+            $('#productLines').append(newProductLine);
+
+            // Clear the input values of the cloned fields
+            newProductLine.find('input').val('');
+
+            // Attach event listener to the cloned input fields
+            newProductLine.find('.qty, .cost').on('input', function () {
+                calculateTotal();
+            });
+        });
+
+        // Calculate VAT and Grand Total
+        function calculateTotal() {
+            var subtotal = 0;
+            $('.form-row').each(function () {
+                var qty = parseFloat($(this).find('.qty').val()) || 0;
+                var cost = parseFloat($(this).find('.cost').val()) || 0;
+
+                var total = qty * cost;
+                subtotal += total;
+
+                $(this).find('.total').val(total.toFixed(2));
+            });
+
+            var vatPercentage = parseFloat($('#vat-percentage').val()) || 0;
+            var vat = subtotal * (vatPercentage / 100);
+            var grandTotal = subtotal + vat;
+
+            $('#sub-total').val(subtotal.toFixed(2));
+            $('#vat').val(vat.toFixed(2));
+            $('#grand-total').val(grandTotal.toFixed(2));
+        }
+
+        // Initial calculation of total
+        calculateTotal();
+    });
+</script>

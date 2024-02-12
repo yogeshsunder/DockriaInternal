@@ -1,0 +1,687 @@
+﻿@{
+    ViewData["Title"] = "ContainerIndex";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Define the CSS styles here *@
+
+@{
+    <text>
+        <style>
+            .dataTables_wrapper .sorting_asc:before,
+            .dataTables_wrapper .sorting_asc:after,
+            .dataTables_wrapper .sorting_desc:before,
+            .dataTables_wrapper .sorting_desc:after,
+            .dataTables_wrapper .sorting:before,
+            .dataTables_wrapper .sorting:after {
+                margin-top: 0.4rem;
+                /*Adjust the margin-top value as needed */
+            }
+
+            table.dataTable thead .sorting:nth-child(3):before,
+            table.dataTable thead .sorting_asc:nth-child(3):before,
+            table.dataTable thead .sorting_desc:nth-child(3):before,
+            table.dataTable thead .sorting:nth-child(3):after,
+            table.dataTable thead .sorting_asc:nth-child(3):after,
+            table.dataTable thead .sorting_desc:nth-child(3):after {
+                content: none;
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                width: 4.5em !important;
+            }
+
+            /*            .dataTables_wrapper::before {
+                                        right: 4%;
+                                        top: 12%;
+                                    }*/
+
+            .modal-content {
+                border: 4px solid #2274A5;
+                border-radius: 5px;
+                padding: 20px;
+            }
+
+
+            .modal-header {
+                background-color: #2274A5;
+                color: #fff;
+                border-bottom: 2px solid #2274A5;
+                border-radius: 5px 5px 0 0;
+            }
+
+
+            .modal-body {
+                padding: 20px;
+            }
+
+
+            .modal-footer {
+                background-color: #f1f1f1;
+                border-top: 2px solid #2274A5;
+                border-radius: 0 0 5px 5px;
+            }
+
+
+            .btn-close {
+                color: #fff;
+            }
+
+            .red-close-button {
+                color: #9F0F0F;
+            }
+
+            .btn-update {
+                background-color: #2274A5;
+                color: #fff;
+            }
+
+
+            .btn-cancel {
+                background-color: #A47A15;
+                color: #fff;
+            }
+
+            .btn-save {
+                background-color: #1B998B;
+                color: #fff;
+            }
+
+
+            .btn-update:hover,
+            .btn-cancel:hover {
+                opacity: 0.8;
+                transition: opacity 0.3s;
+            }
+
+            .modal-dialog.metadata-dialog {
+                max-width: 50%;
+            }
+
+            .modal-body.metadata-body {
+                max-height: 400px; /* Set the maximum height for scrolling */
+                overflow-y: auto; /* Enable vertical scrollbar when content exceeds the maximum height */
+            }
+
+        </style>
+    </text>
+}
+
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title"> CREATE NEW CONTAINER TYPE</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tblData" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">CONTAINER TYPE NAME</th>
+                                @* <th class="wd-15p border-bottom-0">User Group</th>*@
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+                            <div class="col-auto">
+                                <button onclick="exportExcel()" class="btn btn-sm btn-link btn-excell"
+                                        title="Export Excel" data-bs-placement="top" style="color: green;">
+                                    <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-link btn-pdf" style="color: darkred;"
+                                        title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 15px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <a href="#" class="btn btn-sm btn-link text-success btn-add" data-bs-toggle="modal"
+                                   title="Add Document" data-bs-placement="top" data-bs-original-title="Add Document" data-bs-target="#addContainerTypeModal">
+                                    <i class="fa fa-plus-circle plus-icon" style="font-size: 15px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Start Here - Add New Company User Modal *@
+<div id="addContainerTypeModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog" role="document" style="height: 600px; max-width: 1000px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">CREATE NEW CONTAINER TYPE DATA</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="addContainerTypeForm" action="/CompanyAdmin/ContainerType/Create" method="post">
+                    <input type="hidden" id="id" name="Id" />
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="ContainerName" class="col-sm-4 col-form-label" style="padding-right: 0;">CONTAINER TYPE NAME:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="containerName" name="ContainerName" class="form-control" style="margin-bottom: 0;" />
+                                <span id="containerNameError" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    @*                    <div class="form-group card-effect">
+                    <div class="form-group row" style="margin-bottom:0.4em;">
+                    <label for="ContainerDataType" class="col-sm-4 col-form-label" style="padding-right: 0;">CONTAINER DATA TYPE *</label>
+                    <div class="col-sm-8 select-with-arrow">
+                    <select for="ContainerDataType" name="ContainerDataType" class="form-control form-control-sm dropdown-toggle"
+                    data-bs-toggle="dropdown" aria-required="true" id="containerDataType">
+                    <option disabled selected>Select an option...</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                    <option value="option4">Option 4</option>
+                    <option value="option5">Option 5</option>
+                    <!-- Add more options as needed -->
+                    </select>
+                    <span id="ContainerDataTypeError" class="error-message" style="color: red;"></span>
+                    </div>
+                    </div>
+                    </div>*@
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="PERMISSIONS">PERMISSIONS *</label>
+                            <div>
+                                <p class="fade-text">Select 1 user group or multiple by holding Ctrl button</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="UserGroup" class="col-sm-4 col-form-label" style="padding-right: 0;">USER GROUP</label>
+                            <div class="col-sm-8">
+                                <select asp-for="@Model.?UserGroup.?UserGroupName" name="UserGroupName" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" id="groupList" multiple>
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="UserGroupError" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="MetaData">INSERT AUTOMATIC METADATA (At least 1 required)</label>
+                            <div>
+                                <p class="fade-text">
+                                    Select metadata from the list by clicking on + icon.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-8">&nbsp;&nbsp; METADATA NAME</th>
+                                                <th class="col-2 text-center align-middle">REQUIRED?</th>
+                                                <th class="col-1 text-center align-middle">DELETE</th>
+                                                <th class="col-1 text-center align-middle">ADD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Meta-Data">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <span id="MetaDataError" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-viewAll"
+                            data-bs-toggle="modal" data-bs-target="#viewAllValueModal" style=" background-color:#2274A5 ;color: #fff;">
+                        VIEW ALL VALUES
+                    </button>
+                    <button type="button" class="btn btn-save" id="addContainerTypeSubmitButton">SAVE</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" onclick="cancelButtonClicked()">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Add New Company User Modal *@
+
+@* Start Here - Update Container Type Modal *@
+<div id="updateContainerTypeModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog" role="document" style="height: 600px; max-width: 1000px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">UPDATE CONTAINER TYPE</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="updateContainerTypeForm" action="/CompanyAdmin/ContainerType/Update" method="post">
+                    <input type="hidden" id="id_1" name="Id" />
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="ContainerName" class="col-sm-4 col-form-label" style="padding-right: 0;">CONTAINER TYPE NAME:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="containerName_1" name="ContainerName" class="form-control" style="margin-bottom: 0;" />
+                                <span id="containerNameError_1" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    @*                    <div class="form-group card-effect">
+                    <div class="form-group row" style="margin-bottom:0.4em;">
+                    <label for="ContainerDataType" class="col-sm-4 col-form-label" style="padding-right: 0;">CONTAINER DATA TYPE *</label>
+                    <div class="col-sm-8 select-with-arrow">
+                    <select for="ContainerDataType" name="ContainerDataType" class="form-control form-control-sm dropdown-toggle"
+                    data-bs-toggle="dropdown" aria-required="true" id="containerDataType_1">
+                    <option disabled selected>Select an option...</option>
+                    <option value="option1">Option 1</option>
+                    <option value="option2">Option 2</option>
+                    <option value="option3">Option 3</option>
+                    <option value="option4">Option 4</option>
+                    <option value="option5">Option 5</option>
+                    <!-- Add more options as needed -->
+                    </select>
+                    <span id="ContainerDataTypeError_1" class="error-message" style="color: red;"></span>
+                    </div>
+                    </div>
+                    </div>*@
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="PERMISSIONS">PERMISSIONS *</label>
+                            <div>
+                                <p class="fade-text">Select 1 user group or multiple by holding Ctrl button</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="UserGroup" class="col-sm-4 col-form-label" style="padding-right: 0;">USER GROUP</label>
+                            <div class="col-sm-8">
+                                <select id="userGroupNames" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" multiple>
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="UserGroupError_1" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="MetaData">INSERT AUTOMATIC METADATA (At least 1 required)</label>
+                            <div>
+                                <p class="fade-text">
+                                    Select metadata from the list by clicking on + icon.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-8">&nbsp;&nbsp; METADATA NAME</th>
+                                                <th class="col-2 text-center align-middle">REQUIRED?</th>
+                                                <th class="col-1 text-center align-middle">DELETE</th>
+                                                <th class="col-1 text-center align-middle">ADD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Update-Meta-Data">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-viewAll"
+                            data-bs-toggle="modal" data-bs-target="#editviewAllValueModal" style=" background-color:#2274A5 ;color: #fff;">
+
+                        VIEW ALL VALUES
+                    </button>
+                    <button type="button" class="btn btn-update" id="updateContainerTypeBtn">UPDATE</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Update Container Type Modal *@
+
+<!-- Metadata Modal -->
+<div class="modal fade" id="metadata-modal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+    <div id="gradient"></div>
+    <div class="modal-dialog metadata-dialog" role="document">
+        <div class="modal-content metadata-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="metadata-modal-title">SELECT METADATA</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body metadata-body">
+                <div class="mb-2" style="display: flex; justify-content: right;">
+                    <label class="m-2" for="metadataSearchInput">Search :</label>
+                    <input type="text" class="form-data metadataSearchInput" id="metadataSearchInput" placeholder="Search metadata..." />
+                    <div id="searchIcon" style="position: absolute; top: 10.5%; transform: translateY(-50%); right: 25px;">
+                        <i class="fa fa-search"></i>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metaDataBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer metadata-footer" style="display: flex;justify-content: space-evenly;">
+                <button type="button" class="btn btn-save" onclick="addMetadata('add')">EXPORT</button>
+                <button type="button" class="btn btn-save" id="openAddMetaDataTypeModalBtn">
+                    ADD NEW METADATA
+                </button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+<tr>
+    <th class="wd-15p border-bottom-0">METADATA NAME</th>
+
+
+    <!-- Update case Metadata Modal -->
+    <div class="modal fade" id="updateMetadata-modal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+        <div id="gradient"></div>
+        <div class="modal-dialog metadata-dialog" role="document">
+            <div class="modal-content metadata-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateMetadata-modal-title">SELECT METADATA</h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body metadata-body">
+                    <div class="mb-2" style="display: flex; justify-content: right;">
+                        <label class="m-2" for="updateMetaDataSearchInput">Search :</label>
+                        <input type="text" class="form-data metadataSearchInput" id="updateMetaDataSearchInput" placeholder="Search metadata..." />
+                        <div id="updateSearchIcon" style="position: absolute; top: 10.5%; transform: translateY(-50%); right: 25px;">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="wd-15p border-bottom-0">METADATA NAME</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody id="updateMetaDataTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer metadata-footer" style="display: flex;justify-content: center;">
+                    <button type="button" class="btn btn-save col-4" onclick="addMetadata('update')">ADD METADATA</button>
+                    <button type="button" class="btn btn-cancel col-4" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="importMetaDataModal" tabindex="-1" role="dialog" aria-labelledby="importMetaDataLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importMetaDatalLabel">IMPORT METADATA</h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="metaDataForm" method="post" enctype="multipart/form-data">
+                        <div class="form-group cf2">
+                            <label for="metaDataFile">Upload CSV File:</label>
+                            <input type="file" id="metaDataFile" name="metaDataFile" accept=".csv,.xlsx,.xls">
+                            <small class="text-muted">Please upload a CSV file containing the user data.</small>
+                        </div>
+                        <!-- Additional form fields for bulk user data, if needed -->
+                    </form>
+                    <p>Download the <a href="/assets/files/">demo Excel sheet</a> for reference.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-save" onclick="submitForm()">Import MetaData</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewAllValueModal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+        <div id="gradient"></div>
+        <div class="modal-dialog metadata-dialog" role="document">
+            <div class="modal-content metadata-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="metadata-modal-title">VALUE LIST</h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body metadata-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Table to display values -->
+                            <div class="table-responsive">
+                                <table id="tblValues" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th class="wd-15p border-bottom-0">ValueId</th>
+                                            <th class="wd-15p border-bottom-0">Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Add rows of values here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="modal-footer metadata-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-danger" id="deleteValueButton1">DELETE VALUE</button>
+                    <button type="button" class="btn btn-success" onclick="addValueButton()">ADD NEW VALUE</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="cancelButton">CANCEL</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="editviewAllValueModal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+        <div id="gradient"></div>
+        <div class="modal-dialog metadata-dialog" role="document">
+            <div class="modal-content metadata-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="metadata-modal-title">VALUE LIST</h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body metadata-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Table to display values -->
+                            <div class="table-responsive">
+                                <table id="tblValues1" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th class="wd-15p border-bottom-0">ValueId</th>
+                                            <th class="wd-15p border-bottom-0">Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Add rows of values here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <br />
+                        <br>
+                        <br />
+                        <br>
+                        <br />
+                        <br />
+                        <br />
+                        <div class="col-md-4">
+                            <!-- Buttons on the left side -->
+                            <div class="text-right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* <div class="col-md-8">
+                <!-- Empty space -->
+                </div>*@
+
+                <div class="modal-footer metadata-footer d-flex justify-content-center">
+                    <button type="button" class="btn btn-danger" id="deleteValueButton1">DELETE VALUE</button>
+                    <button type="button" class="btn btn-success" onclick="addValueButton()">ADD NEW VALUE</button>
+                   @* <button type="button" class="btn btn-warning" id="editValueButton">EDIT VALUE</button>*@
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="cancelButton">Save</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="bulkModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Messages List</h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="bulkErrorMessage"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="bulkUserModal" tabindex="-1" role="dialog" aria-labelledby="bulkUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bulkUserModalLabel">Bulk User Addition</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bulkUserForm" method="post" enctype="multipart/form-data">
+                        <div class="form-group cf2">
+                            <label for="userDataFile">Upload CSV File:</label>
+                            <input type="file" id="userDataFile" name="userDataFile" accept=".csv,.xlsx,.xls">
+                            <small class="text-muted">Please upload a CSV file containing the user data.</small>
+                        </div>
+                        <!-- Additional form fields for bulk user data, if needed -->
+                    </form>
+
+                    <p>Download the <a href="/assets/files/BulkValues.xlsx">demo Excel sheet</a> for reference.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="ValueForm()">Add Bulk Users</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="partialViewContainer"></div>
+    @section scripts {
+        <script src="~/js/ContainerType1.js"></script>
+        <script src="~/js/ContainerType_2.js"></script>
+        <script src="~/adminAssets/assets/plugins/notify/js/notifIt.js"></script>
+    }
+    <div class="modal" tabindex="-1" role="dialog" id="deleteConfirmationModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmation</h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close" fdprocessedid="pbt1wj">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to delete the selected rows?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="button" class="btn btn-primary" id="confirmDelete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="customAlertModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alert</h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close" fdprocessedid="pbt1wj">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="customAlertMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="customAlertModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alert</h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close" fdprocessedid="pbt1wj">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="customAlertMessage"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>

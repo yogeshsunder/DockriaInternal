@@ -1,0 +1,101 @@
+﻿@using Domain.Model.ViewModel;
+@model List<CompanyViewModel>
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@*<div class="main-panel">
+	<div class="content content-documentation">
+		<div class="container-fluid">
+			<div class="card card-documentation">*@
+				<div class="card-header bg-info-gradient text-white bubble-shadow">
+					<h4>Data List</h4>
+					<p>
+						
+					</p>
+
+				</div>
+<div class="d-flex">
+	<a asp-action="Create" asp-area="Admin" asp-controller="Company" class="btn btn-round ml-auto mb-3">
+		<i class="fa fa-plus"></i>
+		Add Row
+	</a>
+</div>
+							
+			<div class="table-responsive">
+				<table id="add-row" class="display table table-striped table-hover" cellspacing="0" width="100%">
+					<thead>
+						<tr>
+						
+							<td>Company Name</td>
+								@*<th>Website</th>*@
+							<td>Mobile Number</td>
+							<td>Addresss</td>
+							<td>File</td>
+							<td>First Name</td>
+							<td>Last Name</td>
+							<td>Email</td>
+							<td>Designation</td>
+							<td>Company Domain</td>
+							<td>SignatureLimit</td>
+                            
+							<td width="10%">Action</td>
+						
+						</tr>
+					</thead>
+					
+					<tbody>
+						
+							@foreach(var viewModel in Model)
+						{
+							<tr>
+								<td>@viewModel.Company.CompanyName</td>
+								<td>@viewModel.Company.MobileNumber</td>
+								<td>@viewModel.Company.Address</td>
+								<td>@viewModel.Company.Filename</td>
+								<td>@viewModel.User.FirstName</td>
+								<td>@viewModel.User.LastName</td>
+								<td>@viewModel.User.Email</td>
+								<td>@viewModel.User.Designation</td>
+								<td>@viewModel.Company.CompanyDomain</td>
+								<td>@viewModel.Company.SignatureLimit</td>
+								<td>
+									<div class="form-button-action">
+										<button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-simple-primary btn-lg" data-original-title="Edit Task">
+											<a asp-action="Edit" asp-area="Admin" asp-controller="Company" asp-route-id="@viewModel.Company.CompanyId"><i class="fa fa-edit"> </i></a>
+										</button>
+										<button type="button" data-toggle="tooltip" title="" class="btn btn-link btn-simple-danger" data-original-title="Remove">
+											<a asp-action="Delete" asp-area="Admin" asp-controller="Company" asp-route-id="@viewModel.Company.CompanyId"><i class="fa fa-times"></i></a>
+										</button>
+									</div>
+								</td>
+									
+									</tr>
+						}
+						
+								
+							
+
+						
+						
+					</tbody>
+				</table>
+			</div>
+
+</div>
+
+			
+
+
+
+									
+
+
+		
+
+
+			

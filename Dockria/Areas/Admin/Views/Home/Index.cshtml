@@ -1,0 +1,13 @@
+﻿@using Domain.Model;
+
+@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (User.IsInRole(SD.Role_Company_Admin) || User.IsInRole(SD.Role_User))
+{
+    <h1 class="text-center p-3 m-3 text-danger">
+        Your Trail Period Time is : @ViewBag.ExpireTime
+    </h1>
+}

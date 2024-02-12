@@ -1,0 +1,557 @@
+﻿@model Domain.Model.CompanyLogo
+
+@{
+    ViewData["Title"] = "CampanyLogo";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .image-container, .Image-container {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .upload-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.8); /* Adjust the background color and opacity as needed */
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .image-container:hover .upload-overlay, .Image-container:hover .upload-overlay {
+        opacity: 1;
+    }
+
+    .upload-text {
+        font-size: 16px; /* Adjust the font size as needed */
+    }
+</style>
+
+<div class="col-xl-12">
+    <div class="card overflow-hidden">
+        <div class="card-body">
+            <div class="text-wrap">
+                <h2 style="text-align:center">
+                    EDIT COMPANY LOGO
+                </h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="height: 100vh">
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-xl-6 p-0">
+                <div class="panel-body p-0" style="margin-left: 10%;">
+                    <div class="tab-pane active p-0" id="style6tab2">
+                        <div class="card overflow-hidden border-0">
+                            <div class="card-body">
+                                <h3 style="text-align: center; font-size: 30px;">COMPANY ADMIN LOGO</h3>
+                                <div class="d-flex"></div>
+                                <form id="updateLogoForm" class="form-horizontal" enctype="multipart/form-data">
+                                    <input type="hidden" id="userId" value="@Model.Id" />
+                                    <div class="form-group">
+                                        <div class="row row-sm">
+
+                                            <div>
+                                                @if (Model.LogoData != null)
+                                                {
+                                                    var base64Image = Convert.ToBase64String(Model.LogoData);
+                                                    var imgSrc = string.Format("data:image/jpeg;base64,{0}", base64Image);
+                                                    <div id="image-container" class="image-container" onclick="triggerImageInput()">
+                                                        <img id="person-image" src="@imgSrc" class="avatar avatar-xxl br-7" alt="person-image" style="width:60vw;height:30vh;" />
+                                                        <div class="upload-overlay">
+                                                            <i class="bi bi-camera"></i>
+                                                            <br>
+                                                            <span class="upload-text">Upload Image</span>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div id="image-container" class="image-container" onclick="triggerImageInput()">
+                                                        <img id="person-image" src="~/assets/img/logoDockria.svg" class="avatar avatar-xxl br-7" alt="person-image" style="padding-left:85px;width:80%;height:50%;" />
+                                                        <div class="upload-overlay">
+                                                            <i class="bi bi-camera"></i>
+
+                                                            <span class="upload-text">Upload Image</span>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                <input type="file" id="image-upload" style="display: none;" onchange="showImagePreview(event)" />
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="ms-auto" style="padding-left:165px;">
+                                    <input href="javascript:void(0);" type="submit" onclick="onUpdateClick('#updateLogoForm')" value="Update" class="btn btn-primary" />
+                                    <a href="javascript:void(0);" class="btn btn-danger" onclick="deleteLogoData()">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-xl-6 p-0">
+                <div class="panel-body p-0" style="margin-left: 10%;">
+                    <div class="tab-pane active p-0" id="style6tab2">
+                        <div class="card overflow-hidden border-0">
+                            <div class="card-body">
+                                <h3 style="text-align: center; font-size: 30px;">COMPANY ADMIN ICON</h3>
+                                <div class="d-flex"></div>
+                                <form id="updateIconForm" class="form-horizontal" enctype="multipart/form-data">
+                                    <input type="hidden" id="userId" value="@Model.Id" />
+                                    <div class="form-group">
+                                        <div class="row row-sm">
+
+                                            <div>
+                                                @if (Model.IconData != null)
+                                                {
+                                                    var base64Image = Convert.ToBase64String(Model.IconData);
+                                                    var imgSrc = string.Format("data:image/jpeg;base64,{0}", base64Image);
+                                                    <div id="icon-container" class="Image-container" onclick="triggerIconInput()">
+                                                        <img id="company-icon" src="@imgSrc" class="avatar avatar-xxl br-7" alt="company-icon" style="width:50vw;height:30vh;" />
+                                                        <div class="upload-overlay">
+                                                            <i class="bi bi-camera"></i>
+                                                            <span class="upload-text">Upload Icon</span>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div id="icon-container" class="Image-container" onclick="triggerIconInput()">
+                                                        <img id="company-icon" src="~/assets/img/defaultIcon.svg" class="avatar avatar-xxl br-7" alt="company-icon" />
+                                                        <div class="upload-overlay">
+                                                            <span class="upload-text">Upload Icon</span>
+                                                            <i class="bi bi-camera"></i>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                <input type="file" id="icon-upload" style="display: none;" onchange="showIconPreview(event)" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="ms-auto" style="padding-left:165px;">
+                                    <input href="javascript:void(0);" type="submit" onclick="onUpdateIconClick('#updateIconForm')" value="Update" class="btn btn-primary" />
+                                    <a href="javascript:void(0);" class="btn btn-danger" onclick="deleteIconData()">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Message Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="height: 160px">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title" id="messageModalLabel">Message</h5>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">X</button>
+
+            </div>
+            <div class="modal-body" id="messageModalBody"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="okButton">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add a modal -->
+<div class="modal fade" id="deleteLogoModal" tabindex="-1" role="dialog" aria-labelledby="deleteLogoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header
+                bg-primary">
+                <h5 class="modal-title" id="deleteLogoModalLabel">Delete Logo Data</h5>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    X
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete logo data?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteLogo()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteIconModal" tabindex="-1" role="dialog" aria-labelledby="deleteIconModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header
+                bg-primary">
+                <h5 class="modal-title" id="deleteIconModalLabel">Delete Icon Data</h5>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    X
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete Icon data?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger" onclick="confirmDeleteIcon()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add success and error modals -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h5 class="modal-title" id="successModalLabel">Success</h5>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    X
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Success message goes here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="okButton">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                <button type="button" class="btn" data-bs-dismiss="modal">
+                    X
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Error message goes here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="okButton">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Your JavaScript code -->
+<script>
+    $(document).on('click', '#okButton', function () {
+        debugger;
+        location.reload(true); // Reload the entire page with hard reload (clears cache)
+    });
+
+
+    function deleteLogoData() {
+        // Show the confirmation modal
+        $('#deleteLogoModal').modal('show');
+    }
+    function confirmDeleteLogo() {
+        debugger
+        // Send an AJAX request to the server
+        $.ajax({
+            url: '/ProfileManagement/Profile/ConfirmDeleteLogo',
+            type: 'POST',
+            data: {
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function (result) {
+                if (result.success) {
+                    // Update the image source based on the returned data
+                    if (result.logoDataAvailable) {
+                        // Show the success modal
+                        $('#successModal .modal-body').html(result.message);
+                        $('#successModal').modal('show');
+
+                        // Update the image source
+                        $('#logoImage').attr('src', result.logoImageUrl);
+                    } else {
+                        // Show the error modal if logo data is not available
+                        $('#successModal .modal-body').html(result.message);
+                        $('#successModal').modal('show');
+
+                    }
+                } else {
+                    // Show the error modal for server-side error
+                    $('#errorModal .modal-body').html(result.message);
+                    $('#errorModal').modal('show');
+                }
+            },
+            error: function () {
+                // Show the error modal for AJAX error
+                $('#errorModal .modal-body').html('Error occurred during logo data deletion');
+                $('#errorModal').modal('show');
+            },
+            complete: function () {
+                // Close the confirmation modal after the AJAX request is complete
+                $('#deleteLogoModal').modal('hide');
+            }
+        });
+    }
+    function deleteIconData() {
+        // Show the confirmation modal
+        $('#deleteIconModal').modal('show');
+    }
+
+    function confirmDeleteIcon() {
+        // Send an AJAX request to the server
+        $.ajax({
+            url: '/ProfileManagement/Profile/ConfirmDeleteIcon',
+            type: 'POST',
+            data: {
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function (result) {
+                if (result.success) {
+                    // Show the success modal
+                    $('#successModal .modal-body').html(result.message);
+                    $('#successModal').modal('show');
+
+                    // Check if icon data is available
+                    if (result.IconDataAvailable) {
+                        // Update the image source based on the returned data
+                        $('#IconImage').attr('src', result.IconImageUrl);
+                    } else {
+                        // Handle the case where icon data is not available
+                        // (You may want to update the UI accordingly)
+                        console.log("Icon data not available");
+                    }
+                } else {
+                    // Show the error modal for server-side error
+                    $('#errorModal .modal-body').html(result.message);
+                    $('#errorModal').modal('show');
+                }
+            },
+            error: function () {
+                // Show the error modal for AJAX error
+                $('#errorModal .modal-body').html('Error occurred during Icon data deletion');
+                $('#errorModal').modal('show');
+            },
+            complete: function () {
+                // Close the confirmation modal after the AJAX request is complete
+                $('#deleteIconModal').modal('hide');
+
+                // Optionally, you can reload the page here if needed
+                // location.reload();
+            }
+        });
+    }
+
+    // Function triggered when the "Update" button is clicked
+    function onUpdateIconClick(data) {
+        debugger
+        // Validate the form if necessary
+        $('#updateIconForm').validate();
+        if (!$('#updateIconForm').valid()) {
+            return;
+        }
+
+        // Get the icon file from the file input
+        var iconFile = $('#icon-upload')[0].files[0];
+
+        // Check if a file is selected
+        if (!iconFile) {
+            showMessagePopup('Please select an icon file.', true);
+            return;
+        }
+
+        // Get the file extension
+        var fileExtension = iconFile.name.split('.').pop().toLowerCase();
+
+        // Check if the selected file is an SVG or PNG file
+        if (fileExtension !== 'svg' && fileExtension !== 'png') {
+            showMessagePopup('Please select an SVG or PNG icon file.', true);
+            return;
+        }
+
+        var formData = new FormData();
+
+        // Append the icon file to the FormData object
+        formData.append('logoIcon', iconFile);
+
+        // Append the rest of the form data to the FormData object
+        var id = $('#userId').val();
+        formData.append('Id', id ? id : 0);
+
+        formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+        $.ajax({
+            type: 'POST',
+            url: '/ProfileManagement/Profile/CampanyLogo',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (result.success) {
+                    showMessagePopup(result.message || 'Upload successful.', false);
+                    setInterval('location.reload()', 1000);
+                } else {
+                    showMessagePopup(result.message || 'Unknown error occurred.', true);
+                }
+            },
+            error: function () {
+                showMessagePopup('An error occurred while updating the company icon.', true);
+            }
+        });
+    }
+
+    // Function to trigger the file input when the icon container is clicked
+    function triggerIconInput() {
+        document.getElementById('icon-upload').click();
+    }
+
+    // Function to show a preview of the selected icon
+    function showIconPreview(event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var companyIcon = document.getElementById('company-icon');
+            companyIcon.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    // Function to show a message popup with a specified message
+    function showMessagePopup(message, isError = false) {
+        var modalBody = document.getElementById('messageModalBody');
+        modalBody.innerHTML = message || 'Unknown error occurred.';
+
+        var modal = $('#messageModal');
+        if (isError) {
+            modal.find('.modal-header').removeClass('bg-success').addClass('bg-danger');
+        } else {
+            modal.find('.modal-header').removeClass('bg-danger').addClass('bg-success');
+        }
+
+        modal.modal('show');
+    }
+
+
+    function onUpdateClick(data) {
+        debugger;
+        if (data != null) {
+            $('#updateLogoForm').validate();
+            if (!$('#updateLogoForm').valid()) {
+                return;
+            }
+        }
+
+        // Get the image file from the file input
+        var imageFile = $('#image-upload')[0].files[0];
+
+        // Check if a file is selected
+        if (!imageFile) {
+            showMessagePopup('Please select an image file.', true);
+            return;
+        }
+
+        // Get the file extension
+        var fileExtension = imageFile.name.split('.').pop().toLowerCase();
+
+        // Check if the selected file is an SVG or PNG file
+        if (fileExtension !== 'svg' && fileExtension !== 'png') {
+            showMessagePopup('Please select an SVG or PNG image file.', true);
+            return;
+        }
+
+        var formData = new FormData();
+
+        // Append the image file to the FormData object
+        formData.append('logoImage', imageFile);
+
+        // Append the rest of the form data to the FormData object
+        var id = $('#userId').val();
+        formData.append('Id', id ? id : 0);
+
+        formData.append('__RequestVerificationToken', $('input[name="__RequestVerificationToken"]').val());
+
+        $.ajax({
+            type: 'POST',
+            url: '/ProfileManagement/Profile/CampanyLogo',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                debugger;
+                if (result.success) {
+                    debugger;
+                    showMessagePopup(result.message || 'Upload successful.', false);
+                    //window.location.href = '/Admin/Dashboard/Details';
+                } else {
+                    showMessagePopup(result.message || 'Unknown error occurred.', true);
+                }
+            },
+            error: function () {
+                debugger;
+                showMessagePopup('An error occurred while Updating the Company Logo.', true);
+            }
+        });
+
+    }
+
+    function triggerImageInput() {
+        document.getElementById('image-upload').click();
+    }
+
+    function showImagePreview(event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var personImage = document.getElementById('person-image');
+            personImage.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    function showMessagePopup(message, isError = false) {
+        var modalBody = document.getElementById('messageModalBody');
+        modalBody.innerHTML = message || 'Unknown error occurred.';
+
+        var modal = $('#messageModal');
+        if (isError) {
+            modal.find('.modal-header').removeClass('bg-success').addClass('bg-danger');
+        } else {
+            modal.find('.modal-header').removeClass('bg-danger').addClass('bg-success');
+        }
+
+        modal.modal('show');
+    }
+    function triggerImageInput() {
+        document.getElementById('image-upload').click();
+    }
+
+</script>

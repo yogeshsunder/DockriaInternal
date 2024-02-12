@@ -1,0 +1,96 @@
+﻿
+
+@model Domain.Model.ViewModel.CompanyViewModel;
+
+@{
+    ViewData["Title"] = "Create";
+
+}
+
+
+@*<div class="main-panel">
+    <div class="content content-documentation">
+        <div class="container-fluid">
+            <div class="card card-documentation">*@
+                <div class="card-header bg-info-gradient text-white bubble-shadow">
+                    <h4>Forms</h4>
+    <p class="mb-0 op-8">Please fill the form to create Admin</p>
+
+                </div>
+                <div class="card-body">
+                    <div class="table-content">
+
+        <form id="companyAddForm" enctype="multipart/form-data" method="post">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group form-group-default">
+                        <label>Company Name</label>
+                        <input asp-for="@Model.Company.CompanyName" class="form-control" />
+                        <span asp-validation-for="@Model.Company.CompanyName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 pr-0">
+                    <div class="form-group form-group-default">
+                        <label>Mobile Number</label>
+                        <input asp-for="@Model.Company.MobileNumber" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-group-default">
+                        <label>Address</label>
+                        <input asp-for="@Model.Company.Address" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6 pr-0">
+                    <div class="form-group form-group-default">
+                        <label asp-for="DocByte">Choose a File:</label>
+                        <input asp-for="DocByte" id="Files" type="file" class="form-control" />
+                    </div>
+                </div>
+               
+             
+                <div class="col-md-6 pr-0">
+                    <div class="form-group form-group-default">
+                        <label>First Name</label>
+                        <input asp-for="@Model.User.FirstName" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-group-default">
+                        <label>Last Name</label>
+                        <input asp-for="@Model.User.LastName" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6 pr-0">
+                    <div class="form-group form-group-default">
+                        <label>Email</label>
+                        <input asp-for="@Model.User.Email" class="form-control" />
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group form-group-default">
+                        <label asp-for="@Model.User.Designation"></label>
+                        <input asp-for="@Model.User.Designation" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6 pr-0">
+                    <div class="form-group form-group-default">
+                        <label asp-for="@Model.Company.CompanyDomain"></label>
+                        <input asp-for="@Model.Company.CompanyDomain" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group form-group-default">
+                        <label asp-for="@Model.Company.SignatureLimit"></label>
+                        <input asp-for="@Model.Company.SignatureLimit" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <input type="submit" value="Create" class="btn btn-primary" />
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </form>
+    
+                 
+
+

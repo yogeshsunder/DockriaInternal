@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Domain.Model.ViewModel.CompanyAdminUser>
+<div id="partialDiv">
+    <table id="tblData" class="table table-bordered table-head-bg-info table-bordered-bd-info p-0" style="border: 4px solid #2274A5; margin-left:-15px">
+        <thead class="bg-info-gradient text-white bubble-shadow">
+            <tr class="table table-bordered table-bordered-bd-info mt-4">
+                <th colspan="3" style="text-align:center;">LIST OF ALL COMPANIES</th>
+            </tr>
+        </thead>
+        <tbody class="p-0">
+            @foreach (var item in Model)
+            {
+                <tr class="col-sm-12 p-0">
+                    <td class="col-sm-4 p-0 m-0 text-center">
+                        @Html.DisplayFor(Model=>item.Name)
+                    </td>
+                    <td class="row col-sm-12 p-0 m-0">
+                        <div class="col-sm-6 p-2 m-0 text-center">
+                            <a onclick="onEditClick('@item.Id')" class="btn btn-block text-white" style="background-color: #2274A5; width: 120%; display: flex; margin-left:-15px; align-items: center; justify-content: center;">
+                                Edit
+                            </a>
+                        </div>
+                        <div class="col-sm-6 p-2 m-0 text-center">
+                            <a id="deleteButton" onclick="deleteBtn('@item.Id')" class="btn btn-block text-white delete-button" style="background-color: #9F0F0F; width: 150%; display: flex;  align-items: center; justify-content: center;">
+                                Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts{
+    <script src="~/js/Dashboard.js"></script>
+    }

@@ -1,0 +1,599 @@
+﻿
+    @{
+        ViewData["Title"] = "Index";
+        Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    }
+    @* Define the CSS styles here *@
+    @{
+        <text>
+            <style>
+                .dataTables_wrapper .sorting_asc:before,
+                .dataTables_wrapper .sorting_asc:after,
+                .dataTables_wrapper .sorting_desc:before,
+                .dataTables_wrapper .sorting_desc:after,
+                .dataTables_wrapper .sorting:before,
+                .dataTables_wrapper .sorting:after {
+                    margin-top: 0.4rem;
+                    /*Adjust the margin-top value as needed */
+                }
+
+                table.dataTable thead .sorting:nth-child(4):before,
+                table.dataTable thead .sorting_asc:nth-child(4):before,
+                table.dataTable thead .sorting_desc:nth-child(4):before,
+                table.dataTable thead .sorting:nth-child(4):after,
+                table.dataTable thead .sorting_asc:nth-child(4):after,
+                table.dataTable thead .sorting_desc:nth-child(4):after {
+                    content: none;
+                }
+
+                .dataTables_wrapper .dataTables_length select {
+                    width: 4.5em !important;
+                }
+                /* Add a search icon */
+                /*.dataTables_wrapper::before {
+                                                                    right: 4%;
+                                                                    top: 8.5%;
+                                                                }*/
+                /* Style for the modal */
+                .modal-content {
+                    border: 4px solid #2274A5; /* Blue border */
+                    border-radius: 5px;
+                    padding: 20px;
+                }
+
+                /* Style for the modal header */
+                .modal-header {
+                    background-color: #2274A5; /* Blue background color */
+                    color: #fff; /* White text color */
+                    border-bottom: 2px solid #2274A5; /* Blue border at the bottom of the header */
+                    border-radius: 5px 5px 0 0; /* Rounded corners at the top */
+                }
+
+                /* Style for the modal body (your form) */
+                .modal-body {
+                    padding: 20px;
+                }
+
+
+                h1 {
+                    background-color: #2274A5;
+                    color: white;
+                    margin-left: 0px;
+                    padding: 25px 625px;
+                    text-align: left; /* Increase the padding for a larger background */
+                }
+
+                /* Style for the modal footer (if you have one) */
+                .modal-footer {
+                    background-color: #f1f1f1; /* Light gray background color */
+                    border-top: 2px solid #2274A5; /* Blue border at the top of the footer */
+                    border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+                }
+
+                /* Style for the close button (the "X" button in the header) */
+                .btn-close {
+                    color: #fff; /* White text color for the close button */
+                }
+
+                .red-close-button {
+                    color: #9F0F0F; /* Change the text color to red */
+                }
+                /* Style for the UPDATE button */
+                .btn-update {
+                    background-color: #2274A5;
+                    color: #fff;
+                }
+
+                /* Style for the CANCEL button */
+                .btn-cancel {
+                    background-color: #A47A15;
+                    color: #fff;
+                }
+
+                .btn-save {
+                    background-color: #1B998B;
+                    color: #fff;
+                }
+
+                /* Hover effect for both buttons (optional) */
+                .btn-update:hover,
+                .btn-cancel:hover {
+                    opacity: 0.8;
+                    transition: opacity 0.3s;
+                }
+
+                .buttons {
+                    text-align: center;
+                }
+
+                .create-button,
+                .edit-button,
+                .duplicate-button,
+                .draft-button,
+                .delete-button {
+                    width: 110px;
+                    height: 30px;
+                    font-size: 16px;
+                    border-radius: 5px;
+                    background-color: #2274A5;
+                    color: #fff;
+                }
+
+                .button-container {
+                    display: flex;
+                    justify-content: center;
+                    margin: 10px 0; /* Add margin to separate buttons from the table */
+                }
+
+                .btn-duplicate:hover,
+                .btn-draft:hover {
+                    background-color: #1B998B; /* Change the background color on hover */
+                    color: #fff;
+                }
+
+                .custom-btn {
+                    width: 170px; /* Adjust the width as needed */
+                }
+
+                .inline-section {
+                    display: inline-block;
+                    vertical-align: middle; /* Adjust as needed */
+                    margin-left: 135px; /* Adjust spacing as needed */
+                }
+
+            </style>
+        </text>
+    }
+
+    <br />
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card" style="border: 2px solid #2274A5;">
+                <div class="card-header">
+                    <h1 class="card-title" style="border-bottom: none; color: white"><b>WORKFLOWS</b></h1>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tblData" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="wd-15p border-bottom-0" style="background-color: #2274A5; color: #fff;">WORKFLOW NAME</th>
+                                    <th class="wd-15p border-bottom-0" style="background-color: #2274A5; color: #fff;">DESCRIPTION</th>
+                                    <th class="wd-15p border-bottom-0" style="background-color: #2274A5; color: #fff;">ACTIONS</th>
+                                </tr>
+                            </thead>
+
+                            <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+
+                                <div class="col-auto">
+                                    <button onclick="exportExcel()" class="btn btn-sm btn-link btn-excell"
+                                            title="Export Excel" data-bs-placement="top" style="color: #1B998B;">
+                                        <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                    </button>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-sm btn-link btn-pdf" style="color: #9F0F0F;"
+                                            title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                        <i class="fa fa-file-pdf-o" style="font-size: 15px;"></i>
+                                    </button>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#" class="btn btn-sm btn-link btn-add" data-bs-toggle="modal"
+                                       title="Create New Workflow" data-bs-placement="top" data-bs-original-title="Create New Workflow" data-bs-target="#workflowmodal"
+                                       style="color: #1B998B;">
+                                        <i class="fa fa-plus-circle plus-icon" style="font-size: 16px;"></i>
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#" class="btn btn-sm btn-link btn-duplicate" data-bs-toggle="modal"
+                                       title="Duplicate" data-bs-placement="top" data-bs-original-title="Duplicate" data-bs-target="#workflowmodal">
+                                        <i class="fa fa-regular fa-clone" style="font-size: 16px;"></i>
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="#" class="btn btn-sm btn-link btn-draft" data-bs-toggle="modal"
+                                       title="Draft" data-bs-placement="top" data-bs-original-title="Draft" data-bs-target="#workflowmodal">
+                                        <i class="fa fa-drafting-compass" style="font-size: 16px;"></i>
+                                    </a>
+                                </div>
+
+
+                            </div>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @* Start Here - Add New Workflow *@
+    <div id="workflowmodal" class="modal fade" tabindex="-1" role="dialog">
+        <div id="gradient"></div>
+        <div class="modal-dialog" role="document" style="height: 600px; max-width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addWorkFlowModalLabel"><b>CREATE NEW  WORKFLOW</b></h5>
+                    <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form fields for adding/updating user details -->
+                    <form id="addWorkFlowForm" action="/CompanyAdmin/WorFlow/CreateWorkFlow" method="post">
+                        <div class="card-effect" style="margin-bottom:0.4em;">
+                            <div class="form-group row">
+                                <label for="docTypeName" class="col-sm-4 col-form-label" style="padding-right: 0;"> <b>NAME:*</b></label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="docTypeName" name="DocTypeName" class="form-control" style="margin-bottom: 0;" />
+                                    <span id="DocTypeNameError" class="error-message" style="color: #9F0F0F;"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-effect" style="margin-bottom:0.4em;">
+                            <div class="form-group row">
+                                <label for="docTypeName" class="col-sm-4 col-form-label" style="padding-right: 0;"><b> DESCRIPTION:</b></label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="docTypeName" name="DocTypeName" class="form-control" style="margin-bottom: 0;" />
+                                    <span id="DocTypeNameError" class="error-message" style="color: #9F0F0F;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group card-effect">
+                            <div style="margin-bottom:0.4em;">
+                                <label for="DocumentNaming"><h5><b>VISIBILITY OF THE WORKFLOW *</b></h5></label>
+                                <div style="display: inline-block;">
+                                    <p class="fade-text">(This option is used to determine which users can see the workflow and the documents involved.)</p>
+                                </div>
+                                <br />
+                            <div class="workflow-settings">
+                                <div class="radio" style="display: inline-block; margin-right: 50px;">
+                                    <input type="radio" id="groupVisibility" name="visibility" value="group" checked>
+                                    <label for="groupVisibility">Visible to User Group(s)</label>
+                                    <div class="dropdown-container" style="display: inline-block; margin-left: 10px;">
+                                        <div class="dropdown">
+                                            <!-- Use a button with an ID for the event handler -->
+                                            <button id="groupDropdownButton" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; background-color: white;">
+                                                Select Group(s)
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="groupDropdown">
+                                                <select id="groupList"  class="form-control" data-selected-value="default">
+                                                    <!-- Options will be dynamically populated using JavaScript -->
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                                <br />
+                                <div style="border-bottom: 1px solid black;"></div>
+                                <br />
+
+                            <div class="workflow-settings">
+                                <div class="form-group row">
+                                    <label for="UserGroup" class="col-sm-4 col-form-label" style="padding-right: 0;">USER GROUP</label>
+                                    <div class="col-sm-8">
+                                        <select id="userGroupNames" name="UserGroupNames" class="form-control form-control-sm dropdown-toggle"
+                                                data-bs-toggle="dropdown" aria-required="true" multiple>
+                                            <option disabled selected></option>
+                                        </select>
+                                        <span id="UserGroupError_1" class="error-message" style="color: #9F0F0F;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                                <br />
+                                <div style="border-bottom: 1px solid black;"></div>
+                                <br />
+                                <div class="radio">
+                                    <input type="radio" id="taskBasedVisibility" name="visibility" value="task-based">
+                                    <label for="taskBasedVisibility">Workflow Task Based User(s) Only</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group card-effect">
+                            <div style="margin-bottom:0.4em;">
+                                <label for="DocumentNaming"><h5><b>STARTING THE WORKFLOW *</b></h5></label>
+                                <div style="display: inline-block;">
+                                    <p class="fade-text">(This option is used to determine When and How a workflow should start.)</p>
+                                </div>
+                                <br />
+                                <div class="workflow-settings">
+                                    <div class="radio" style="display: inline-block; margin-right: 50px;">
+                                        <label for="userVisibility">Document Type*</label>
+                                        <div class="dropdown-container" style="display: inline-block; margin-left: 405px;">
+                                            <div class="dropdown">
+                                                <button class="dropdown-toggle" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; background-color: white;">
+                                                    Select Doc Type
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                                    <select id="selectUsers" name="users[]" multiple>
+                                                        <option value="user1">1</option>
+                                                        <option value="user2">2</option>
+                                                        <option value="user3">3</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div style="border-bottom: 1px solid black;"></div>
+                                <br />
+                                <div class="radio">
+                                    <input type="radio" name="start-trigger" value="new-document" checked>
+                                    <label>When a New Document is Added</label>
+                                </div>
+                                <br />
+                                <div style="border-bottom: 1px solid black;"></div>
+                                <br />
+                                <div class="radio">
+                                    <input type="radio" name="start-trigger" value="user-initiated">
+                                    <label>When a User(s) initiates the Workflow</label>
+                                </div>
+                                <br />
+                                <div style="border-bottom: 1px solid black;"></div>
+                                <br />
+                                <div class="radio" style="display: inline-block; margin-right: 10px;">
+                                    <input type="radio" name
+                                        ="start-trigger" value="specific-date-time">
+                                    <label style="display: inline-block; margin-right: 310px;">On a Specific Day and Time</label>
+                                    <input type="datetime-local" name="start-date-time">
+                                </div>
+                                <br /><br />
+                                <div style="border-bottom: 1px solid black;"></div>
+                                <br />
+                                <div class="checkbox">
+                                    <input type="checkbox" name="document-upload-required" checked>
+                                    <label>Document Upload Required? *</label>
+                                </div>
+                                <div>
+                                    <p class="fade-text">(This option is used to determine if a Document Upload to the System is required for this workflow to start.)</p>
+                                </div>
+                                <br />
+                                <div style="border-bottom: 1px solid black;"></div>
+                                <br />
+                                <button type="button" class="btn btn-info" style="border: 1px solid #000; color:#fff ; background-color: #2274A5;" onclick="openEscalationModal()">ESCALATION & MONITORING OF WORKFLOW</button>
+                            </div>
+                            <div>
+                                <p class="fade-text">(This option is only enabled when all the above parameters are correct and completed.)</p>
+                            </div>
+                        </div>
+                    </form>
+                    <br />
+
+                    <div class="modal-footer">
+                        <div class="mx-auto">
+                            <button type="button" class="btn btn-save custom-btn" id="addUserSubmitButton" style="margin-right: 12px;">SAVE</button>
+                            <button type="button" class="btn btn-cancel custom-btn" data-bs-dismiss="modal">CANCEL</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            @* Start Here - ESCALATION & MONITORING OF WORKFLOW*@
+
+            <div id="escalationModal" class="modal fade" tabindex="-1" role="dialog">
+                <div id="gradient"></div>
+                <div class="modal-dialog" role="document" style="height: 600px; max-width: 1000px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addUserModalLabel"><b>ESCALATION & MONITORING OF WORKFLOW</b></h5>
+                            <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Form fields for adding/updating user details -->
+                            <form id="addDocumentForm"  method="post">
+                                <div class="form-group card-effect">
+                                    <div style="margin-bottom: 0.4em;">
+                                        <input type="checkbox" id="monitorsCheckbox" name="monitorsCheckbox">
+                                        <label for="monitorsCheckbox">
+                                            <h5><b>MONITORS OF THE WORKFLOW- </b></h5>
+                                        </label>
+                                        <label>
+                                            <p class="fade-text">(If enabled this option is used to determine which users can monitor this workflow and what type of email notification they will receive.)</p>
+                                        </label>
+                                        <br />
+                                        <div class="workflow-settings">
+                                            <div class="radio" style="display: inline-block; width:100%">
+                                                <div class="border-container">
+                                                    <input type="radio" id="userVisibility" name="visibility" value="user" checked>
+                                                    <label for="userVisibility">Select User(s)                      </label>
+                                                    <div class="dropdown-container" style="display: inline-block; margin-left: 383px;">
+                                                        <div class="dropdown">
+                                                            <button class="dropdown-toggle" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; background-color: white;">
+                                                                Select User(s)
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                                                <select id="selectUsers" name="users[]" multiple>
+                                                                    <option value="user1">User 1</option>
+                                                                    <option value="user2">User 2</option>
+                                                                    <option value="user3">User 3</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div style="border-bottom: 1px solid black;"></div>
+                                                <br />
+                                                <div class="border-container">
+                                                    <input type="radio" id="taskBasedVisibility" name="visibility" value="task-based">
+                                                    <label for="taskBasedVisibility">Send System Generated Email on Each Completed Task</label>
+                                                </div>
+                                                <br />
+                                                <div style="border-bottom: 1px solid black;"></div>
+                                                <br />
+                                                <div class="border-container">
+                                                    <input type="radio" id="groupVisibility" name="visibility" value="group" checked>
+                                                    <label for="groupVisibility">Send Customized Email on each Completed Task</label>
+                                                    <div class="dropdown-container" style="display: inline-block; margin-left: 166px;">
+                                                        <div class="dropdown">
+                                                            <button class="dropdown-toggle" id="groupDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; background-color: white;">
+                                                                Select Metadata
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="groupDropdown">
+                                                                <select id="selectGroups" name="groups[]" multiple>
+                                                                    <option value="usergroup1">User group 1</option>
+                                                                    <option value="usergroup2">User group 2</option>
+                                                                    <option value="usergroup3">User group 3</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <br />
+                                                <div class="border-container">
+
+                                                    <div class="dropdown-container" style="display: inline-block; margin-left: 500px;">
+                                                        <div class="dropdown">
+                                                            <button class="dropdown-toggle" id="groupDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; background-color: white;">
+                                                                Select Metadata
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="groupDropdown">
+                                                                <select id="selectGroups" name="groups[]" multiple>
+                                                                    <option value="usergroup1">User group 1</option>
+                                                                    <option value="usergroup2">User group 2</option>
+                                                                    <option value="usergroup3">User group 3</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group card-effect">
+                                    <div style="margin-bottom:0.4em;">
+                                        <input type="checkbox" id="monitorsCheckbox" name="monitorsCheckbox">
+                                        <label for="monitorsCheckbox">
+                                            <h5><b>ESCALATION OF THE WORKFLOW -</b></h5>
+                                        </label>
+                                        <div style="display: inline-block;">
+                                            <p class="fade-text">(If enabled this option is used to determine which users will the workflow get escalated to and what type of email notification will they receive.)</p>
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <div class="workflow-settings">
+                                            <div class="radio" style="display: inline-block; margin-right: 50px;">
+                                                <label for="userVisibility">Select User(s)*</label>
+                                                <div class="dropdown-container" style="display: inline-block; margin-left: 405px;">
+                                                    <div class="dropdown">
+                                                        <button class="dropdown-toggle" id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; background-color: white;">
+                                                            Select User(s)*
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="userDropdown">
+                                                            <select id="selectUsers" name="users[]" multiple>
+                                                                <option value="user1">1</option>
+                                                                <option value="user2">2</option>
+                                                                <option value="user3">3</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div style="border-bottom: 1px solid black;"></div>
+                                        <br />
+                                        <div class="radio">
+                                            <input type="radio" name="start-trigger" value="new-document" checked>
+                                            <label>Escalation Rule-Overall*</label>
+                                            <div class="inline-section">
+                                                After due date +
+                                                <input type="number" min="1" name="business_days" placeholder="Input Business Days"> +
+                                                Frequency Select Option:
+                                                <select name="frequency">
+                                                    <option value="daily">Daily</option>
+                                                    <option value="weekly">Weekly</option>
+                                                    <option value="monthly">Monthly</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <br />
+                                        <div style="border-bottom: 1px solid black;"></div>
+                                        <br />
+                                        <div class="radio">
+                                            <input type="radio" name="start-trigger" value="user-initiated">
+                                            <label>Send System Generated Email</label>
+                                        </div>
+                                        <br />
+                                        <div style="border-bottom: 1px solid black;"></div>
+                                        <br />
+                                        <div class="workflow-settings">
+                                            <div class="radio" style="display: inline-block; margin-right: 50px;">
+                                                <input type="radio" id="groupVisibility" name="visibility" value="group" checked>
+                                                <label for="groupVisibility">Send Customized Email</label>
+                                                <div class="dropdown-container" style="display: inline-block; margin-left: 330px;">
+                                                    <div class="dropdown">
+                                                        <button class="dropdown-toggle" id="groupDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; background-color: white;">
+                                                            Select Metadata
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="groupDropdown">
+                                                            <select id="selectGroups" name="groups[]" multiple>
+                                                                <option value="usergroup1">User group 1</option>
+                                                                <option value="usergroup2">User group 2</option>
+                                                                <option value="usergroup3">User group 3</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="dropdown">
+                                                        <button class="dropdown-toggle" id="groupDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border: none; background-color: white;">
+                                                            Select Metadata
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="groupDropdown">
+                                                            <select id="selectGroups" name="groups[]" multiple>
+                                                                <option value="usergroup1">User group 1</option>
+                                                                <option value="usergroup2">User group 2</option>
+                                                                <option value="usergroup3">User group 3</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div style="border-bottom: 1px solid black;"></div>
+                                        <br />
+                                        <button type="button" class="btn btn-info" style="border: 1px solid #000; color:#fff ; background-color: #2274A5;">CREATE TASKS</button>
+                                    </div>
+                                    <div>
+                                        <p class="fade-text">(This option is only enabled when all the above parameters are correct and completed.)</p>
+                                    </div>
+                                </div>
+                            </form>
+                            <br />
+
+                            <div class="modal-footer">
+                                <div class="mx-auto">
+                                    <button type="button" class="btn btn-save custom-btn" id="addUserSubmitButton" style="margin-right: 12px;">PREVIOUS</button>
+                                    <button type="button" class="btn btn-save custom-btn" id="addUserSubmitButton" style="margin-right: 12px;">SAVE</button>
+                                    <button type="button" class="btn btn-cancel custom-btn" data-bs-dismiss="modal">CANCEL</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@section scripts {
+    <script src="~/js/WorkFlow.js"></script>
+}

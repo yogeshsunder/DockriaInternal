@@ -1,0 +1,11 @@
+﻿@using Domain.Model;
+@if (User.IsInRole(SD.Role_Company_Admin))
+{
+	Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+else
+{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+

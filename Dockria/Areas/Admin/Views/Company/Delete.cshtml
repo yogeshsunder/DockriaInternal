@@ -1,0 +1,53 @@
+﻿@model Domain.Model.ViewModel.CompanyViewModel;
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete the following create Account?</p>
+
+<table class="table">
+    <tr>
+        <td>CompanyName</td>
+        <td>@Model.Company.CompanyName</td>
+    </tr>
+    <tr>
+        <td>MobileNumber</td>
+        <td>@Model.Company.MobileNumber</td>
+    </tr>
+    <tr>
+        <td>Address</td>
+        <td>@Model.Company.Address</td>
+    </tr>
+    <tr>
+        <td>File</td>
+        <td>@Model.Company.Filename</td>
+    </tr>
+    <tr>
+        <td>FirstName</td>
+        <td>@Model.User.FirstName</td>
+    </tr>
+    <tr>
+        <td>LastName</td>
+        <td>@Model.User.LastName</td>
+    </tr>
+    <tr>
+        <td>Email</td>
+        <td>@Model.User.Email</td>
+    </tr>
+    <tr>
+        <td>Designation</td>
+        <td>@Model.User.Designation</td>
+    </tr>
+    <tr>
+        <td>Company Domain</td>
+        <td>@Model.Company.CompanyDomain</td>
+    </tr>
+    <td>Signature Limit</td>
+    <td>@Model.Company.SignatureLimit</td>
+</table>
+
+<form method="post">
+    <div class="form-group">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>

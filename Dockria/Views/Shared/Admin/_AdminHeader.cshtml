@@ -1,0 +1,68 @@
+
+<div class="app-header header sticky">
+	<div class="container-fluid main-container">
+		<div class="d-flex">
+			<a id="sidebar-toggle" aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar"
+			   href="javascript:void(0)"></a>
+
+			<div class="d-flex order-lg-2 ms-auto header-right-icons">
+				<div class="navbar navbar-collapse responsive-navbar p-0">
+					<div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+						<div class="d-flex order-lg-2">
+							<!--Full screen--></>
+							<div class="dropdown d-flex">
+								<a class="nav-link icon full-screen-link" id="fullscreen-button">
+									<i class="ri-fullscreen-exit-line fullscreen-button"></i>
+								</a>
+							</div>
+							<!-- COUNTRY -->
+							<div class="d-flex country">
+								<a class="nav-link icon theme-layout nav-link-bg layout-setting">
+									<span class="dark-layout mt-1"><i class="ri-moon-clear-line"></i></span>
+									<span class="light-layout mt-1"><i class="ri-sun-line"></i></span>
+								</a>
+							</div>
+							
+							<!-- SIDE-MENU -->
+							<div class="dropdown d-flex profile-1">
+								<a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex">
+									<!-- Replace the profile image with a logo -->
+									<i class="fas fa-user-circle fa-2x"></i>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow"
+									 data-bs-popper="none">
+									<div class="drop-heading">
+										<div class="text-center">
+											<div class="nav-link text-dark">Hello @User.Identity?.Name!</div>
+										</div>
+									</div>
+									<a class="dropdown-item text-dark fw-semibold border-top" asp-area="ProfileManagement" asp-controller="Profile" asp-action="Profile">
+										<i class="dropdown-icon fe fe-user"></i> Profile
+									</a>
+									<a class="dropdown-item text-dark fw-semibold" >
+										<i class="dropdown-icon fe fe-mail"></i> Inbox
+										<span class="badge bg-success float-end">3</span>
+									</a>
+									<a class="dropdown-item text-dark fw-semibold">
+										<i class="dropdown-icon fe fe-settings"></i> Settings
+									</a>
+									<a class="dropdown-item text-dark fw-semibold">
+										<i class="dropdown-icon fe fe-alert-triangle"></i>
+										Support ?
+									</a>
+									<form class="admin-logout dropdown-item text-dark fw-semibold" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+										<button type="submit" class="nav-link btn btn-link text-dark">
+											<i class="dropdown-icon fe fe-log-out"></i> Sign
+											out
+										</button>
+									</form>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>

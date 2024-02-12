@@ -1,0 +1,159 @@
+﻿@model Domain.Model.ViewModel.smgViewModel
+
+<div id="addSmgModal">
+    <table class="table table-bordered table-head-bg-info table-bordered-bd-info w-100" style="border: 4px solid #2274A5;">
+        <thead>
+            <tr class="table table-bordered table-bordered-bd-warning mt-4">
+                <th colspan="3" style="text-align: center;">SMG INFO</th>
+            </tr>
+        </thead>
+    </table>
+@*    <table class="table" id="table_data">
+        <tr>
+
+            <td style="padding: 0px 10px !important;">*@
+                <form id="addsmgForm" style="border: 4px solid #2274A5; margin-top:-10px;">
+                    <div class="form-group row ">
+                        <div class="col-md-5">
+                            <label asp-for="@Model.Id"> SMG UNIQUE ID</label>
+
+                        </div>
+                        <div class="col-sm-7" style="text-align:right;">
+                            <input asp-for="@Model.Id" type="text" class="form-control form-control-sm" id="id" readonly />
+                            <span asp-validation-for="@Model.Id" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <label asp-for="@Model.SmgName" class="col-form-label small">SMG NAME</label>
+
+                        </div>
+
+                        <div class="col-md-7" style="text-align:right">
+                            <input asp-for="@Model.SmgName" type="text" class="form-control form-control-sm" id="smg-name" />
+                            <span asp-validation-for="@Model.SmgName" class="text-danger" style="font-weight:bold; margin-right:60px;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <label asp-for="@Model.PaymentCurrencyName" class="col-form-label small">PAYMENT CURRENCY</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <select asp-for="@Model.PaymentCurrencyName" class="form-control form-control-sm" aria-required="true" id="payment-currency">
+                                <option disabled selected></option>
+
+                            </select>
+                            <span asp-validation-for="@Model.PaymentCurrencyName" class="text-danger" style="font-weight:bold;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <label asp-for="@Model.PaymentIntervalName" class="col-form-label small">PAYMENT INTERVAL</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <select asp-for="@Model.PaymentIntervalName" class="form-control form-control-sm" aria-required="true" id="payment-interval">
+                                <option disabled selected>Select Payment Interval</option>
+                                <option>3 Months</option>
+                            </select>
+                            <span asp-validation-for="@Model.PaymentIntervalName" class="text-danger" style="font-weight:bold;"></span>
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <label asp-for="@Model.TaxName" class=" col-form-label small">TAX NAME</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input asp-for="@Model.TaxName" type="text" class="form-control  form-control-sm" id="tax-name">
+                            <span asp-validation-for="@Model.TaxName" class="text-danger" style="font-weight:bold;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <label asp-for="@Model.TaxPercentage" class=" col-form-label small">TAX PERCENTAGE</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <input asp-for="@Model.TaxPercentage" type="text" class="form-control  form-control-sm" id="tax-percentage">
+                            <span asp-validation-for="@Model.TaxPercentage" class="text-danger" style="font-weight:bold;"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-5">
+                            <label asp-for="@Model.PaymentTypeName" class="col-form-label small">PAYMENT TYPE</label>
+                        </div>
+                        <div class="col-sm-7">
+                            <select asp-for="@Model.PaymentTypeName" class="form-control form-control-sm" aria-required="true" id="payment-type" name="PaymentTypeName">
+                                <option disabled selected></option>
+                                <option>Cash</option>
+                            </select>
+                            <span asp-validation-for="@Model.PaymentTypeName" class="text-danger" style="font-weight:bold;"></span>
+                        </div>
+                    </div>
+                </form>
+@*            </td>
+        </tr>
+    </table>*@
+</div>
+
+<!-- Add the confirmation modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmationModalLabel">Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="confirmationModalBody">
+                <!-- Confirmation message will be displayed here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add the success modal -->
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Success</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="successModalBody">
+                <!-- Success message will be displayed here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="okButton">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add the error modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="errorModalBody">
+                <!-- Error message will be displayed here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="okButton">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

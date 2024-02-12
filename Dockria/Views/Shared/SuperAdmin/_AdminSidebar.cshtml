@@ -1,0 +1,290 @@
+@using Domain.Model;
+
+@{
+    <text>
+        <style>
+            /*  .logo-container {
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        height: 6.5rem;
+                                    }
+
+                                    .side-menu {
+                                        margin-block-end: 0;
+                                        padding-block-start: 0;
+                                        padding-inline-end: 10px;
+                                        padding-block-end: 0;
+                                        padding-inline-start: 10px;
+                                    }
+
+                                    .side-menu__item {
+                                        position: relative;
+                                        display: -webkit-box;
+                                        display: -ms-flexbox;
+                                        display: flex;
+                                        -webkit-box-align: center;
+                                        -ms-flex-align: center;
+                                        align-items: center;
+                                        padding: 10px 20px;
+                                        font-size: 14px;
+                                        font-weight: 500;
+                                        -webkit-transition: border-inline-start-color 0.3s ease, background-color 0.3s ease;
+                                        -o-transition: border-inline-start-color 0.3s ease, background-color 0.3s ease;
+                                        transition: border-inline-start-color 0.3s ease, background-color 0.3s ease;
+                                        color: #454e60;
+                                        margin: 2px 0px;
+                                        white-space: nowrap;
+                                    }*/
+
+            /* Initially hide the text and show only icons */
+            /*  .nav-item span {
+                                        display: none; /* Hide text */
+            /*    }
+                        */
+            /*.nav-item .sidebar-mini-icon {
+                                        display: block; /* Show icons */
+            /*    }
+
+                                    /* When hovering over the sidebar, show text and hide icons */
+            /*  .sidebar:hover .nav-item span {
+                                                    display: inline; /* Show text */
+            /*    }*/
+        </style>
+    </text>
+}
+<div class="container">
+    <div class="sidebar active">
+        <div class="menu-btn">
+            <i class="ph-bold fas fa-caret-left"></i>
+        </div>
+        <div class="head">
+            <div class="user-logo">
+                <img src="~/assets/img/logoDockria.svg" alt="navbar brand" class="navbar-brand">
+            </div>
+        </div>
+        <div class="nav">
+            <div class="menu">
+                <p class="title">Main</p>
+                <ul>
+                    <li>
+                        <a href="#">
+                            <i class="icon ph-bold fas fa-home"></i>
+                            <span class="text">Dashboard</span>
+                            <i class="arrow fas fa-arrow-down"></i>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a asp-action="Home" asp-area="Admin" asp-controller="MasterAdmin" class="btn btn-link btn-simple-primary btn-lg">
+                                    <span class="text">Home</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-action="Index" asp-area="Admin" asp-controller="MasterAdmin" class="btn btn-link btn-simple-primary btn-lg">
+                                    <span class="text">Master Admin</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-action="Create" asp-area="Admin" asp-controller="MasterAdmin" class="btn btn-link btn-simple-primary btn-lg">
+                                    <span class="text">Add/Edit <br />Master Admin</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="active">
+                        <a src="#">
+                            <i class="icon ph-bold fas fa-home"></i>
+                            <span class="text">Company Dashboard</span>
+                            <i class="arrow fas fa-arrow-down"></i>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a asp-action="Index" asp-area="Admin" asp-controller="Dashboard" class="btn btn-link btn-simple-primary btn-lg">
+                                    <span class="text">Company Panel</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-action="Details" asp-area="Admin" asp-controller="Dashboard" class="btn btn-link btn-simple-primary btn-lg">
+                                    <span class="text">Create/Manage <br />A Company</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-action="Index" asp-area="Admin" asp-controller="Smg" class="btn btn-link btn-simple-primary btn-lg">
+                                    <span class="text">
+                                        Subscription <br />
+                                        Management
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="menu">
+                <p class="title">Settings</p>
+                <ul>
+                    <li>
+                        <a href="#">
+                            <i class="icon ph-bold fas fa-sign-out-alt"></i>
+                            <span class="text">Log Out</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<div class="sidebar sidebar-style-2">
+    <div class="sidebar-background"></div>
+    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+        <div class="sidebar-content">
+            <ul class="nav nav-info">
+                <li class="nav-section">
+                    <span class="sidebar-mini-icon">
+                        <i class="fa fa-ellipsis-h"></i>
+                    </span>*@
+@*   <h4 class="text-section">Main Menu</h4>*@
+@*               </li>
+                @if (User.IsInRole(SD.Role_Admin))
+                {
+
+                    <li class="nav-item">
+                        <a asp-action="Home" asp-area="Admin" asp-controller="MasterAdmin" class="btn btn-link btn-simple-primary btn-lg">
+                            <span class="sidebar-mini-icon">
+                                <i class="fas fa-home"></i>
+                                Home
+                            </span>
+                        </a>
+                        <a asp-action="Index" asp-area="Admin" asp-controller="MasterAdmin" class="btn btn-link btn-simple-primary btn-lg">
+                            <span class="sidebar-mini-icon">
+                                <i class="icon-menu fas fa-user-cog"></i>
+                                Master Admin
+                            </span>
+                        </a>
+                        <a asp-action="Create" asp-area="Admin" asp-controller="MasterAdmin" class="btn btn-link btn-simple-primary btn-lg">
+                            <span class="sidebar-mini-icon">
+                                <i class="icon-menu fas fa-pencil-alt"></i>
+                                Add/Edit Master Admin
+                            </span>
+                        </a>
+                        <br>
+                        <hr>
+                        <br>
+                        <a asp-action="Index" asp-area="Admin" asp-controller="Dashboard" class="btn btn-link btn-simple-primary btn-lg">
+                            <span class="sidebar-mini-icon">
+                                <i class="icon-menu fas fa-building"></i>Company Panel
+                            </span>
+                        </a>
+                        <a asp-action="Details" asp-area="Admin" asp-controller="Dashboard" class="btn btn-link btn-simple-primary btn-lg">
+                            <span class="sidebar-mini-icon">
+                                <i class="fas fa-cogs"></i>Create/Manage <br />A Company
+                            </span>
+                        </a>
+                        <a asp-action="Index" asp-area="Admin" asp-controller="Smg" class="btn btn-link btn-simple-primary btn-lg">
+                            <span class="sidebar-mini-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                                Subscription <br />
+                                Management
+                            </span>
+                        </a>
+                    </li>
+                }
+                <li class="nav-item ml-auto" style="margin-top:8em;">
+                    <form class="admin-logout dropdown-item text-dark fw-semibold" asp-area="Identity" asp-page="/Account/Logout"
+                          asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="btn btn-link log-out sidebar-text sidebar-mini-icon" style="color: red; font-weight: 700; font-size: 1.2rem;">
+                            <i class="fas fa-sign-out-alt" style="margin-left: 2.8em;"></i> Sign out
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>*@
+
+<style>
+
+    /*  .tab-content {
+            display: flex;
+            justify-content: center;
+        }
+
+        .sidemenu-list li {
+            text-align: center;
+        }
+
+        .panel-body {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .left-side {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+        }
+
+            .left-side li {
+                padding: 10px 0;
+            }*/
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $(".menu > ul > li").click(function (e) {
+        // remove active from already active
+        $(this).siblings().removeClass("active");
+        // add active to click
+        $(this).toggleClass("active");
+        // if has sub-menu open it
+        $(this).find("ul").slideToggle();
+        // close other sub menu if any open
+        $(this).siblings().find("ul").slideUp();
+        // remove active class of sub menu items
+        $(this).siblings().find("ul").find("li").removeClass("active");
+    });
+
+    $(".menu-btn").click(function () {
+        $(".sidebar").toggleClass("active");
+    });
+
+    // Function to handle logo upload
+    function uploadLogo() {
+        $("#logo-upload").click();
+    }
+
+    // Function to handle the logo upload using AJAX
+    $("#logo-upload").on("change", function () {
+        var formData = new FormData();
+        formData.append("file", $(this).prop("files")[0]);
+
+        $.ajax({
+            url: "/CompanyAdmin/CompanyAdmin/UploadLogo", // Replace with the correct area and controller route
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (response) {
+                // Handle the response (e.g., update the logo display)
+                var logoImage = $("<img>", {
+                    src: "~/assets/img/" + response.fileName,
+                    class: "header-brand-img main-logo",
+                    alt: "Sparic logo",
+                    style: "height: 6.5rem",
+                    id: "logo"
+                });
+
+                $(".logo-container").empty().append(logoImage);
+            },
+            error: function () {
+                // Handle the error if needed
+                alert("An error occurred during logo upload.");
+            }
+        });
+    });
+</script>

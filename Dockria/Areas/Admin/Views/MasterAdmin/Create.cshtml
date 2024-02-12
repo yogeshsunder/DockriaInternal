@@ -1,0 +1,29 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<Domain.Model.ApplicationUser>
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card-header bg-info-gradient text-center text-white bubble-shadow">
+    <h5>ADD/EDIT MASTER ADMIN</h5>
+
+
+</div>
+<br />
+<br />
+
+<div id="admin-container" class="row">
+    <div id="admin-list" class="col-md-6">
+        @Html.Partial("_AdminList", Model)
+
+    </div>
+
+
+    <div class="col-md-6">
+        @await Html.PartialAsync("_AdminForm",new Domain.Model.ApplicationUser())
+    </div>
+
+</div>
+
+
+<script src="~/js/Master.js"></script>

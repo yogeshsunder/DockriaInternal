@@ -1,0 +1,442 @@
+﻿@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Define the CSS styles here *@
+@{
+    <text>
+        <style>
+            .button-container {
+                justify-content: center;
+                gap: 5px;
+            }
+
+            table.dataTable thead .sorting:nth-child(2):before,
+            table.dataTable thead .sorting_asc:nth-child(2):before,
+            table.dataTable thead .sorting_desc:nth-child(2):before,
+            table.dataTable thead .sorting:nth-child(2):after,
+            table.dataTable thead .sorting_asc:nth-child(2):after,
+            table.dataTable thead .sorting_desc:nth-child(2):after {
+                content: none;
+            }
+
+            .btn-edit:hover {
+                color: white;
+            }
+
+            .dataTables_wrapper input[type="search"] {
+                width: 12em !important;
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                width: 4.5em !important;
+            }
+            /* Add a search icon */
+            .dataTables_wrapper::before {
+                right: 38px;
+                top: 17.5%;
+            }
+
+            .modal-content {
+                border: 4px solid #2274A5; /* Blue border */
+                border-radius: 5px;
+                padding: 20px;
+            }
+
+            /* Style for the modal header */
+            .modal-header {
+                background-color: #2274A5; /* Blue background color */
+                color: #fff; /* White text color */
+                border-bottom: 2px solid #2274A5; /* Blue border at the bottom of the header */
+                border-radius: 5px 5px 0 0; /* Rounded corners at the top */
+            }
+
+            /* Style for the modal body (your form) */
+            .modal-body {
+                padding: 20px;
+            }
+
+            /* Style for the modal footer (if you have one) */
+            .modal-footer {
+                background-color: #f1f1f1; /* Light gray background color */
+                border-top: 2px solid #2274A5; /* Blue border at the top of the footer */
+                border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+            }
+
+            /* Style for the close button (the "X" button in the header) */
+            .btn-close {
+                color: #fff; /* White text color for the close button */
+            }
+
+            .red-close-button {
+                color: #9F0F0F; /* Change the text color to red */
+            }
+
+            /* Style for the UPDATE button */
+            .btn-update {
+                background-color: #2274A5;
+                color: #fff;
+            }
+
+            /* Style for the CANCEL button */
+            .btn-cancel {
+                background-color: #A47A15;
+                color: #fff;
+            }
+
+                /* Hover effect for both buttons (optional) */
+                .btn-update:hover,
+                .btn-cancel:hover {
+                    opacity: 0.8;
+                    transition: opacity 0.3s;
+                }
+        </style>
+    </text>
+}
+
+<br />
+<div class="row">
+    <div class=" col-lg-6 offset-sm-3">
+        <div class="card" style="border: 4px solid #2274A5;">
+            <div class="card-header">
+                <h3 class="card-title">GROUP PERMISSIONS</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tblData" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Group Name</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+                            <div class="col-auto">
+                                <button onclick="exportExcel()" class="btn btn-sm btn-link btn-excell" data-bs-toggle="tooltip"
+                                        title="Export Excel" data-bs-placement="top" style="color: #1B998B;">
+                                    <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-link btn-pdf" style="color: #9F0F0F;" data-bs-toggle="tooltip"
+                                        id="exportPdfBtn" title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 15px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                @*     <a asp-action="Index" asp-area="CompanyAdmin" asp-controller="GroupPermission" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Add Group" data-bs-original-title="Add Group Permission"
+                                class="btn btn-sm btn-link text-success btn-add" style="color: #1B998B;">
+
+                                <i class="fa fa-plus-circle plus-icon" style="font-size: 16px; color: #1B998B;"></i>
+
+                                </a>*@
+                                <a asp-action="Index" asp-area="CompanyAdmin" asp-controller="GroupPermission" class="btn btn-sm btn-link  btn-add" data-bs-toggle="tooltip"
+                                   data-bs-placement="top" data-bs-original-title="Add Group Permission" title="Add Group Permission"
+                                   style="color: #1B998B;">
+                                    <i class="fa fa-plus-circle plus-icon" style="font-size: 16px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*// DMS Restriction Pop Up View for Edit*@
+<div id="editDmsModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editDmsModalLabel">EDIT DMS RESTRICTIONS</h5>
+                @*                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>*@
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="editDmsForm" action="/CompanyAdmin/GroupPermission/EditDms" method="post">
+                    <input type="hidden" id="Id" name="Id" />
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group border border-secondary p-3">
+                                <div class="checkbox-list">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="ViewDoc" value="ViewDoc" id="viewDoc">
+                                                <label class="form-check-label" for="ViewDoc">View Doc</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocSinAdd" value="DocSinAdd" id="docSinAdd">
+                                                <label class="form-check-label" for="DocSinAdd">Upload Single Document</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocMulAdd" value="DocMulAdd" id="docMulAdd">
+                                                <label class="form-check-label" for="DocMulAdd">Upload multiple documents</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocCopy" value="DocCopy" id="docCopy">
+                                                <label class="form-check-label" for="">Copy Doc</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocMove" value="DocMove" id="docMove">
+                                                <label class="form-check-label" for="DocMove">Move Doc</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocDelete" value="DocDelete" id="docDelete">
+                                                <label class="form-check-label" for="DocDelete">Delete Doc</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocRename" value="DocRename" id="docRename">
+                                                <label class="form-check-label" for="DocRename">Rename File</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocPrivate" value="DocPrivate" id="docPrivate">
+                                                <label class="form-check-label" for="DocPrivate">Make Document Private</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocDown" value="DocDown" id="docDown">
+                                                <label class="form-check-label" for="DocDown">Download PDF</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocPrint" value="DocPrint" id="docPrint">
+                                                <label class="form-check-label" for="DocPrint">Print PDF</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="ViewMatadata" value="ViewMatadata" id="viewMatadata">
+                                                <label class="form-check-label" for="ViewMatadata">View Metadata</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="EditMatadata" value="EditMatadata" id="editMatadata">
+                                                <label class="form-check-label" for="EditMatadata">Edit Metadata</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="ShareDocInt" value="ShareDocInt" id="shareDocInt">
+                                                <label class="form-check-label" for="ShareDocInt">Share Doc Internally</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="ShareDocExt" value="ShareDocExt" id="shareDocExt">
+                                                <label class="form-check-label" for="ShareDocExt">Share Doc Externally</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="ShareSigExt" value="ShareSigExt" id="shareSigExt">
+                                                <label class="form-check-label" for="ShareSigExt">Share Signature Externally</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="AuditLogDoc" value="AuditLogDoc" id="auditLogDoc">
+                                                <label class="form-check-label" for="AuditLogDoc">Audit Log - Document(s)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocVerView" value="DocVerView" id="docVerView">
+                                                <label class="form-check-label" for="DocVerView">Document Version View</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DocRollBack" value="DocRollBack" id="docRollBack">
+                                                <label class="form-check-label" for="DocRollBack">Document Roll-back option</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="DownCsvRpt" value="DownCsvRpt" id="downCsvRpt">
+                                                <label class="form-check-label" for="DownCsvRpt">Download CSV report</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="AuditLogUser" value="AuditLogUser" id="auditLogUser">
+                                                <label class="form-check-label" for="AuditLogUser">Audit Log - User(s)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="AsgnDocUser" value="AsgnDocUser" id="asgnDocUser">
+                                                <label class="form-check-label" for="AsgnDocUser">Assign Document to User</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div>
+                                            <div class="form-check">
+                                                <input class="form-check-input documentMangCheckbox" type="checkbox" name="MaxDocUpSize"
+                                                       style="margin-top:0.5em;" value="MaxDocUpSize" id="maxDocUpSize">
+                                                <label class="form-check-label" for="MaxDocUpSize">
+                                                    Maximum Upload Size of a Document
+                                                    <input type="text" class="text-center" name="MaxDocNum" id="maxDocUpNum" style="width: 2.5em;" />&nbsp; In MB
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-update" id="updateDmsSubmitButton">UPDATE</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*// End User Restriction Pop Up View for Edit*@
+<div id="editEndUserModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEndUserModalLabel">EDIT END USER RESTRICTIONS</h5>
+                @*                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>*@
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="editEndUserForm" action="/CompanyAdmin/GroupPermission/EditEndUser" method="post">
+                    <input type="hidden" id="endUserId" name="EndUserId" />
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input endUserManagement" type="checkbox" name="EditEmail" value="EditEmail" id="editEmail">
+                                <label class="form-check-label" for="EditEmail">Edit  Email</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input endUserManagement" type="checkbox" name="EditPassword" value="EditPassword" id="editPassword">
+                                <label class="form-check-label" for="EditPassword">Edit  Password</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input endUserManagement" type="checkbox" name="EditSign" value="EditSign" id="editSign">
+                                <label class="form-check-label" for="EditSign">Edit  Signature</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-update" id="endUserSubmitButton">UPDATE</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*RAD PDF Tool Restriction Pop Up View for Edit*@
+<div id="editRadModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editRadModalLabel">EDIT RAD PDF TOOL RESTRICTIONS</h5>
+                @*                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>*@
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="editRadForm" action="/CompanyAdmin/GroupPermission/EditRad" method="post">
+                    <input type="hidden" id="editRadId" name="EditRadId" />
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input radManagement" type="checkbox" name="RadView" value="RadView" id="radView">
+                                <label class="form-check-label" for="Group">PDF View</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input radManagement" type="checkbox" name="RadEdit" value="RadEdit" id="radEdit">
+                                <label class="form-check-label" for="User">PDF Edit</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input radManagement" type="checkbox" name="RadFormFill" value="RadFormFill" id="radFormFill">
+                                <label class="form-check-label" for="AuditLog">Form Fill</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-update" id="updateRadSubmitButton">UPDATE</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/detailGroupPermission.js"></script>
+}

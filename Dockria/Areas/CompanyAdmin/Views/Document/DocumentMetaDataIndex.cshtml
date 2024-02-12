@@ -1,0 +1,550 @@
+﻿@{
+    ViewData["Title"] = "DocumentMetaDataIndex";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Define the CSS styles here *@
+@{
+    <text>
+        <style>
+            #tblData_length select.dataTables-select {
+                width: auto !important; /* Set the width to auto or a suitable value */
+            }
+
+            .dataTables_wrapper .sorting_asc:before,
+            .dataTables_wrapper .sorting_asc:after,
+            .dataTables_wrapper .sorting_desc:before,
+            .dataTables_wrapper .sorting_desc:after,
+            .dataTables_wrapper .sorting:before,
+            .dataTables_wrapper .sorting:after {
+                margin-top: 0.4rem;
+                /*Adjust the margin-top value as needed */
+            }
+
+            table.dataTable thead .sorting:nth-child(2):before,
+            table.dataTable thead .sorting_asc:nth-child(2):before,
+            table.dataTable thead .sorting_desc:nth-child(2):before,
+            table.dataTable thead .sorting:nth-child(2):after,
+            table.dataTable thead .sorting_asc:nth-child(2):after,
+            table.dataTable thead .sorting_desc:nth-child(2):after,
+            table.dataTable thead .sorting:nth-child(4):before,
+            table.dataTable thead .sorting_asc:nth-child(4):before,
+            table.dataTable thead .sorting_desc:nth-child(4):before,
+            table.dataTable thead .sorting:nth-child(4):after,
+            table.dataTable thead .sorting_asc:nth-child(4):after,
+            table.dataTable thead .sorting_desc:nth-child(4):after,
+            table.dataTable thead .sorting:nth-child(5):before,
+            table.dataTable thead .sorting_asc:nth-child(5):before,
+            table.dataTable thead .sorting_desc:nth-child(5):before,
+            table.dataTable thead .sorting:nth-child(5):after,
+            table.dataTable thead .sorting_asc:nth-child(5):after,
+            table.dataTable thead .sorting_desc:nth-child(5):after {
+                content: none;
+            }
+
+            /* .dataTables_wrapper .dataTables_length select {
+                                                    width: 4.5em !important;
+                                                }*/
+            .modal-content {
+                border: 4px solid #2274A5; /* Blue border */
+                border-radius: 5px;
+                padding: 20px;
+            }
+
+            /* Style for the modal header */
+            .modal-header {
+                background-color: #2274A5; /* Blue background color */
+                color: #fff; /* White text color */
+                border-bottom: 2px solid #2274A5; /* Blue border at the bottom of the header */
+                border-radius: 5px 5px 0 0; /* Rounded corners at the top */
+            }
+
+            /* Style for the modal body (your form) */
+            .modal-body {
+                padding: 20px;
+            }
+
+            /* Style for the modal footer (if you have one) */
+            .modal-footer {
+                background-color: #f1f1f1; /* Light gray background color */
+                border-top: 2px solid #2274A5; /* Blue border at the top of the footer */
+                border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+            }
+
+            /* Style for the close button (the "X" button in the header) */
+            .btn-close {
+                color: #fff; /* White text color for the close button */
+            }
+
+            .red-close-button {
+                color: #9F0F0F; /* Change the text color to red */
+            }
+            /* Style for the UPDATE button */
+            .btn-update {
+                background-color: #2274A5;
+                color: #fff;
+            }
+
+            /* Style for the CANCEL button */
+            .btn-cancel {
+                background-color: #A47A15;
+                color: #fff;
+            }
+
+            .btn-save {
+                background-color: #1B998B;
+                color: #fff;
+            }
+
+            /* Hover effect for both buttons (optional) */
+            .btn-update:hover,
+            .btn-cancel:hover {
+                opacity: 0.8;
+                transition: opacity 0.3s;
+            }
+
+        </style>
+    </text>
+}
+
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card" style="border: 4px solid #2274A5;">
+            <div class="card-header">
+                <h3 class="card-title">DOCUMENTS LIST</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tblData" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">DOC TYPE NAME</th>
+                                <th class="wd-15p border-bottom-0">OCR</th>
+                                <th class="wd-15p border-bottom-0">AUTO FILE Name</th>
+                                <th class="wd-15p border-bottom-0">Versioning</th>
+                                <th class="text-center">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+                            <div class="col-auto">
+                                <button onclick="exportExcel()" class="btn btn-sm btn-link btn-excell"
+                                        title="Export Excel" data-bs-placement="top" style="color:#1B998B;">
+                                    <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-link btn-pdf" style="color: #9F0F0F;"
+                                        title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 15px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                @*       <a href="#" class="btn btn-sm btn-link text-success btn-add" data-bs-toggle="modal"
+                                title="Add Document" data-bs-placement="top" data-bs-original-title="Add Document" data-bs-target="#addDocumentModal">
+                                <i class="fa fa-plus-circle plus-icon" style="font-size: 15px;"></i>
+                                </a>*@
+                                <a href="#" class="btn btn-sm btn-link  btn-add" data-bs-toggle="modal"
+                                   title="Add Document" data-bs-placement="top" data-bs-original-title="Add Document" data-bs-target="#addDocumentModal"
+                                   style="color: #1B998B;">
+                                    <i class="fa fa-plus-circle plus-icon" style="font-size: 16px;"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Start Here - Add New Company User Modal *@
+<div id="addDocumentModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document" style="height: 600px; max-width: 1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">CREATE NEW DOCUMENT TYPE</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="addDocumentForm" action="/CompanyAdmin/Document/CreateDocument" method="post">
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="docTypeName" class="col-sm-4 col-form-label" style="padding-right: 0;">DOC TYPE NAME:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="docTypeName" name="DocTypeName" class="form-control" style="margin-bottom: 0;" />
+                                <span id="DocTypeNameError" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 0.8em;">
+                            <div class="col-sm-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="form-check" style="margin-right: 2em;">
+                                        <input type="checkbox" class="form-check-input" id="ocr" name="OCR" value="true" style="margin-bottom: 0;">
+                                        <label class="form-check-label" for="ocr">OCR</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="versioning" name="VERSIONING" value="true" style="margin-bottom: 0;">
+                                        <label class="form-check-label" for="versioning">VERSIONING</label>
+                                    </div>
+                                </div>
+                                <span id="OcrVersioningError" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="PERMISSIONS">PERMISSIONS *</label>
+                            <div>
+                                <p class="fade-text">Select 1 user group or multiple by holding Ctrl button</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="UserGroup" class="col-sm-4 col-form-label" style="padding-right: 0;">USER GROUP</label>
+                            <div class="col-sm-8">
+                                <select asp-for="@Model.?UserGroup.?UserGroupName" name="UserGroupName" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" id="groupList" multiple>
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="UserGroupError" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="DocumentNaming">DOCUMENT NAMING *</label>
+                            <div>
+                                <p class="fade-text">Select one of the FileName Metadata created from the list. Only 1 Selection</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="AutoFileName" class="col-sm-4 col-form-label" style="padding-right: 0;">AUTO FILE NAME</label>
+                            <div class="col-sm-8 select-with-arrow">
+                                <select for="FileNameTypeId" name="FileNameTypeId" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" id="autoFileNameList">
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="AutoFileNameError" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="MetaData">INSERT METADATA (optional)</label>
+                            <div>
+                                <p class="fade-text">
+                                    Select metadata from the list or leave it blank.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table id="responsive-datatable" class="table table-bordered text-nowrap border-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-8">&nbsp;&nbsp; METADATA NAME</th>
+                                                <th class="col-2 text-center align-middle">REQUIRED?</th>
+                                                <th class="col-1 text-center align-middle">DELETE</th>
+                                                <th class="col-1 text-center align-middle">ADD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Meta-Data">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div>
+                        <table id="tblValues" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                        <th></th>
+                        <th class="wd-15p border-bottom-0">ValueId</th>
+                        <th class="wd-15p border-bottom-0">Name</th>
+                        </tr>
+                        </thead>
+                        <tbody id="valuesContainer">
+                        <!-- Add rows of values here -->
+                        </tbody>
+                        </table>
+                        </div>*@
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-save" id="addUserSubmitButton">SAVE</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Add New Company User Modal *@
+
+@* Start Here - Update Company User Modal *@
+<div id="updateDocumentModal" class="modal fade" tabindex="-1" role="dialog">
+    <div id="gradient"></div>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document" style="height: 600px; max-width: 1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">UPDATE DOCUMENT TYPE</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="updateDocumentForm" action="/CompanyAdmin/Document/UpdateDocument" method="post">
+                    <input type="hidden" id="id" name="Id" />
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="DocTypeName" class="col-sm-4 col-form-label" style="padding-right: 0;">DOC TYPE NAME:</label>
+                            <div class="col-sm-8">
+                                <input type="text" id="docTypeName_1" name="DocTypeName" class="form-control" style="margin-bottom: 0;" />
+                                <span id="DocTypeNameError_1" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row" style="margin-top: 0.8em;">
+                            <div class="col-sm-12">
+                                <div class="d-flex align-items-center">
+                                    <div class="form-check" style="margin-right: 2em;">
+                                        <input type="checkbox" class="form-check-input" id="ocr_1" name="OCR" value="true" style="margin-bottom: 0;">
+                                        <label class="form-check-label" for="ocr">OCR</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="versioning_1" name="VERSIONING" value="true" style="margin-bottom: 0;">
+                                        <label class="form-check-label" for="versioning">VERSIONING</label>
+                                    </div>
+                                </div>
+                                <span id="OcrVersioningError_1" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="PERMISSIONS">PERMISSIONS *</label>
+                            <div>
+                                <p class="fade-text">Select 1 user group or multiple by holding Ctrl button</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="UserGroup" class="col-sm-4 col-form-label" style="padding-right: 0;">USER GROUP</label>
+                            <div class="col-sm-8">
+                                <select id="userGroupNames" name="UserGroupNames" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" multiple>
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="UserGroupError_1" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="DocumentNaming">DOCUMENT NAMING *</label>
+                            <div>
+                                <p class="fade-text">Select one of the FileName Metadata created from the list. Only 1 Selection</p>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="AutoFileName" class="col-sm-4 col-form-label" style="padding-right: 0;">AUTO FILE NAME</label>
+                            <div class="col-sm-8 select-with-arrow">
+                                <select for="FileNameTypeId" name="FileNameTypeId" class="form-control form-control-sm dropdown-toggle"
+                                        data-bs-toggle="dropdown" aria-required="true" id="autoFileNameList_1">
+                                    <option disabled selected></option>
+                                </select>
+                                <span id="AutoFileNameError_1" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group card-effect">
+                        <div style="margin-bottom:0.4em;">
+                            <label for="MetaData">INSERT METADATA (optional)</label>
+                            <div>
+                                <p class="fade-text">
+                                    Select metadata from the list or leave it blank.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table id="responsive-datatable" class="table table-bordered text-nowrap border-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="col-8">&nbsp;&nbsp; METADATA NAME</th>
+                                                <th class="col-2 text-center align-middle">REQUIRED?</th>
+                                                <th class="col-1 text-center align-middle">DELETE</th>
+                                                <th class="col-1 text-center align-middle">ADD</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Update-Meta-Data">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <span id="MetaDataError_1" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-update" id="updateDocumentBtn">Update</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Update Company User Modal *@
+
+<!-- Metadata Modal -->
+<div class="modal fade" id="metadata-modal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+    <div id="gradient"></div>
+    <div class="modal-dialog metadata-dialog" role="document">
+        <div class="modal-content metadata-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="metadata-modal-title">SELECT METADATA</h5>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body metadata-body">
+                <div class="mb-2" style="display: flex; justify-content: right;">
+                    <label class="m-2" for="metadataSearchInput">Search :</label>
+                    <input type="text" class="form-data metadataSearchInput" id="metadataSearchInput" placeholder="Search metadata..." />
+                    <div id="searchIcon" style="position: absolute; top: 10.5%; transform: translateY(-50%); right: 25px;">
+                        @*<i class="fa fa-search"></i>*@
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">METADATA NAME</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metaDataTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer metadata-footer" style="display: flex;justify-content: center;">
+                @*  <button type="button" class="btn btn-primary" data-bs-toggle="modal" title="Import MetaData" data-bs-placement="top"
+                data-bs-original-title="Import MetaData" data-bs-target="#importMetaDataModal">
+                IMPORT
+                </button>*@
+                <button type="button" class="btn btn-save col-4" onclick="addMetadata('add')">ADD METADATA</button>
+                <button type="button" class="btn btn-cancel col-4" data-bs-dismiss="modal">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update case Metadata Modal -->
+<div class="modal fade" id="updateMetadata-modal" tabindex="-1" role="dialog" aria-labelledby="metadata-modal-title" aria-hidden="true">
+    <div id="gradient"></div>
+    <div class="modal-dialog metadata-dialog" role="document">
+        <div class="modal-content metadata-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateMetadata-modal-title">SELECT METADATA</h5>
+                @* <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>*@
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+            <div class="modal-body metadata-body">
+                <div class="mb-2" style="display: flex; justify-content: right;">
+                    <label class="m-2" for="metadataSearchInput">Search :</label>
+                    <input type="text" class="form-data metadataSearchInput" id="updateMetaDataSearchInput" placeholder="Search metadata..." />
+                    <div id="updateSearchIcon" style="position: absolute; top: 10.5%; transform: translateY(-50%); right: 25px;">
+                        @* <i class="fa fa-search"></i>*@
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">METADATA NAME</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="updateMetaDataTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer metadata-footer" style="display: flex;justify-content: center;">
+                <button type="button" class="btn btn-save col-4" onclick="addMetadata('update')">ADD METADATA</button>
+                <button type="button" class="btn btn-cancel col-4" data-bs-dismiss="modal">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="importMetaDataModal" tabindex="-1" role="dialog" aria-labelledby="importMetaDataLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importMetaDatalLabel">IMPORT METADATA</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="metaDataForm" method="post" enctype="multipart/form-data">
+                    <div class="form-group cf2">
+                        <label for="metaDataFile">Upload CSV File:</label>
+                        <input type="file" id="metaDataFile" name="metaDataFile" accept=".csv,.xlsx,.xls">
+                        <small class="text-muted">Please upload a CSV file containing the user data.</small>
+                    </div>
+                    <!-- Additional form fields for bulk user data, if needed -->
+                </form>
+                <p>Download the <a href="/assets/files/">demo Excel sheet</a> for reference.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-save" onclick="submitForm()">Import MetaData</button>
+                <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="customAlertModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alert</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close" fdprocessedid="pbt1wj">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="customAlertMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts {
+    <script src="~/js/DocumentType.js"></script>
+    <script src="~/adminAssets/assets/plugins/notify/js/notifIt.js"></script>
+}

@@ -1,0 +1,419 @@
+﻿@model IEnumerable<Domain.Model.CompanyUsers>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Define the CSS styles here *@
+@{
+    <text>
+        <style>
+
+            .dataTables_wrapper .sorting_asc:before,
+            .dataTables_wrapper .sorting_asc:after,
+            .dataTables_wrapper .sorting_desc:before,
+            .dataTables_wrapper .sorting_desc:after,
+            .dataTables_wrapper .sorting:before,
+            .dataTables_wrapper .sorting:after {
+                margin-top: 0.4rem;
+                /*Adjust the margin-top value as needed */
+            }
+
+            table.dataTable thead .sorting:nth-child(5):before,
+            table.dataTable thead .sorting_asc:nth-child(5):before,
+            table.dataTable thead .sorting_desc:nth-child(5):before,
+            table.dataTable thead .sorting:nth-child(5):after,
+            table.dataTable thead .sorting_asc:nth-child(5):after,
+            table.dataTable thead .sorting_desc:nth-child(5):after,
+            table.dataTable thead .sorting:nth-child(6):before,
+            table.dataTable thead .sorting_asc:nth-child(6):before,
+            table.dataTable thead .sorting_desc:nth-child(6):before,
+            table.dataTable thead .sorting:nth-child(6):after,
+            table.dataTable thead .sorting_asc:nth-child(6):after,
+            table.dataTable thead .sorting_desc:nth-child(6):after,
+            table.dataTable thead .sorting:nth-child(7):before,
+            table.dataTable thead .sorting_asc:nth-child(7):before,
+            table.dataTable thead .sorting_desc:nth-child(7):before,
+            table.dataTable thead .sorting:nth-child(7):after,
+            table.dataTable thead .sorting_asc:nth-child(7):after,
+            table.dataTable thead .sorting_desc:nth-child(7):after,
+            table.dataTable thead .sorting:nth-child(8):before,
+            table.dataTable thead .sorting_asc:nth-child(8):before,
+            table.dataTable thead .sorting_desc:nth-child(8):before,
+            table.dataTable thead .sorting:nth-child(8):after,
+            table.dataTable thead .sorting_asc:nth-child(8):after,
+            table.dataTable thead .sorting_desc:nth-child(8):after {
+                content: none;
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+                width: 4.5em !important;
+            }
+            /* Add a search icon */
+            /*            .dataTables_wrapper::before {
+                                        right: 45px;
+                                        top: 7.8%;
+                                    }*/
+            /* Style for the modal */
+            .modal-content {
+                border: 4px solid #2274A5; /* Blue border */
+                border-radius: 5px;
+                padding: 20px;
+            }
+
+            /* Style for the modal header */
+            .modal-header {
+                background-color: #2274A5; /* Blue background color */
+                color: #fff; /* White text color */
+                border-bottom: 2px solid #2274A5; /* Blue border at the bottom of the header */
+                border-radius: 5px 5px 0 0; /* Rounded corners at the top */
+            }
+
+            /* Style for the modal body (your form) */
+            .modal-body {
+                padding: 20px;
+            }
+
+            /* Style for the modal footer (if you have one) */
+            .modal-footer {
+                background-color: #f1f1f1; /* Light gray background color */
+                border-top: 2px solid #2274A5; /* Blue border at the top of the footer */
+                border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+            }
+
+            /* Style for the close button (the "X" button in the header) */
+            .btn-close {
+                color: #fff; /* White text color for the close button */
+            }
+
+            .red-close-button {
+                color: #9F0F0F; /* Change the text color to red */
+            }
+            /* Style for the UPDATE button */
+            .btn-update {
+                background-color: #2274A5;
+                color: #fff;
+            }
+
+            /* Style for the CANCEL button */
+            .btn-cancel {
+                background-color: #A47A15;
+                color: #fff;
+            }
+
+                /* Hover effect for both buttons (optional) */
+                .btn-update:hover,
+                .btn-cancel:hover {
+                    opacity: 0.8;
+                    transition: opacity 0.3s;
+                }
+
+        </style>
+    </text>
+}
+
+<br />
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card" style="border: 4px solid #2274A5;">
+            <div class="card-header">
+                <h3 class="card-title"><b>USERS</b></h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    @*<div class="col-md-6">
+                        <div class="float-right">
+                            <input type="text" id="table-search" class="form-control" placeholder="Search...">
+                        </div>
+                    </div>*@
+
+                    <table id="responsive-datatable" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">FULL NAME</th>
+                                <th class="wd-15p border-bottom-0">EMAIL</th>
+                                <th class="wd-15p border-bottom-0">DEPARTMENT</th>
+                                <th class="wd-15p border-bottom-0">MOBILE NUMBER</th>
+                                <th class="wd-15p border-bottom-0">PERMISSIONS</th>
+                                <th class="text-center">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+                            <div class="col-auto">
+                                <button onclick="exportExcel()" class="btn btn-sm btn-link btn-excell" data-bs-toggle="tooltip"
+                                        title="Export Excel" data-bs-placement="top" style="color: #1B998B;">
+                                    <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-link btn-pdf" style="color: #9F0F0F;" data-bs-toggle="tooltip"
+                                        title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 15px;"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <a href="#" class="btn btn-sm btn-link  btn-add" data-bs-toggle="modal" data-toggle="tooltip"
+                                   title="Add User" data-bs-placement="top" data-bs-original-title="Add User" data-bs-target="#addUserModal"
+                                   style="color: #1B998B;">
+                                    <i class="fa fa-plus-circle plus-icon" style="font-size: 16px;"></i>
+                                </a>
+                            </div>
+
+                            <div class="col-auto">
+                                <a href="#" class="btn btn-sm btn-link btn-users" data-bs-toggle="modal" title="Add Bulk User" data-toggle="tooltip"
+                                   data-bs-placement="top" data-bs-original-title="Add User" data-bs-target="#bulkUserModal" style="color: #1B998B;">
+                                    <i class="fa fa-users" style="font-size: 16px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <tbody id="tableBodyContent">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Start Here - Update Company User Modal *@
+<div id="editUserModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">EDIT COMPANY USER</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="updateUserForm" action="/CompanyAdmin/CompanyAdmin/UpdateUser" method="post">
+                    <input type="hidden" id="userId" name="Id" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" class="form-control">
+                                <span id="emailError" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" pattern="\d{3}[\-]\d{3}[\-]\d{4}" required>
+                                <span id="phoneError" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="form-control">
+                                <span id="firstNameError" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="form-control">
+                                <span id="lastNameError" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="department">Department</label>
+                                <input type="text" id="department" name="department" class="form-control">
+                                <span id="departmentError" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Permissions</label>
+                                <div class="form-check">
+                                    <input type="checkbox" id="readPermission" class="form-check-input">
+                                    <label class="form-check-label" for="readPermission">Read</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="writePermission" class="form-check-input">
+                                    <label class="form-check-label" for="writePermission">Write</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="uploadPermission" class="form-check-input">
+                                    <label class="form-check-label" for="uploadPermission">Upload Document</label>
+                                    <br>
+                                    <span id="permissionsError" class="error-message" style="color:#9F0F0F;  margin-left:-20px;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div id="errorMessageContainer" class="text-danger"></div> <!-- Error message container -->
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button id="updateUserBtn" type="button" class="btn btn-update">UPDATE</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Update Company User Modal *@
+
+@* Start Here - Add New Company User Modal *@
+<div id="addUserModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">ADD COMPANY USER</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="addUserForm" action="/CompanyAdmin/CompanyAdmin/CreateUser" method="post">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email1">Email</label>
+                                <input type="email" id="email1" name="email1" class="form-control">
+                                <span id="emailError1" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="phoneNumber1">Phone Number</label>
+                                <input type="text" id="phoneNumber1" name="phoneNumber1" class="form-control" required onkeypress="return isNumberKey(event, 10)">
+                                <span id="phoneError1" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="firstName1">First Name</label>
+                                <input type="text" id="firstName1" name="firstName1" class="form-control" required>
+                                <span id="firstNameError1" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="lastName1">Last Name</label>
+                                <input type="text" id="lastName1" name="lastName1" class="form-control" required>
+                                <span id="lastNameError1" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="department1">Department</label>
+                                <input type="text" id="department1" name="department1" class="form-control" required>
+                                <span id="departmentError1" class="error-message" style="color:#9F0F0F;"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Permissions</label>
+                                <div class="form-check">
+                                    <input type="checkbox" id="readPermission1" name="readPermission1" class="form-check-input">
+                                    <label class="form-check-label" for="readPermission1">Read</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="writePermission1" name="writePermission1" class="form-check-input">
+                                    <label class="form-check-label" for="writePermission1">Write</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="uploadPermission1" name="uploadPermission1" class="form-check-input">
+                                    <label class="form-check-label" for="uploadPermission1">Upload Document</label>
+                                    <br />
+                                    <span id="permissionsError1" class="error-message" style="color:#9F0F0F;  margin-left:-20px;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer text-center">
+                        <div class="button-container">
+                            <button type="button" class="btn btn-save" id="addUserSubmitButton" style="background-color: #1B998B; color: #fff;">SAVE</button>
+                            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" style="background-color: #A47A15; color: #fff;">CANCEL</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@* End Here - Add New Company User Modal *@
+
+<div id="errorModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="errorMessage"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="bulkModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Messages List</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="bulkErrorMessage"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="bulkUserModal" tabindex="-1" role="dialog" aria-labelledby="bulkUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkUserModalLabel">Bulk User Addition</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="bulkUserForm" method="post" enctype="multipart/form-data">
+                    <div class="form-group cf2">
+                        <label for="userDataFile">Upload CSV File:</label>
+                        <input type="file" id="userDataFile" name="userDataFile" accept=".csv,.xlsx,.xls">
+                        <small class="text-muted">Please upload a CSV file containing the user data.</small>
+                    </div>
+                    <!-- Additional form fields for bulk user data, if needed -->
+                </form>
+                <p>Download the <a href="/assets/files/BulkUsers.xlsx">demo Excel sheet</a> for reference.</p>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-save" id="submitButton" style="background-color: #1B998B; color: #fff;">Add</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal" style="background-color: #A47A15; color: #fff;">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="~/js/companyUsers.js"></script>
+
+
+}

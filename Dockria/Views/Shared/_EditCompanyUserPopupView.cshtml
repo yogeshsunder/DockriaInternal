@@ -1,0 +1,62 @@
+﻿@model Domain.Model.CompanyUsers
+
+<div class="modal-header">
+    <h5 class="modal-title">Edit Company User</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <!-- Form fields for adding/updating user details -->
+    <form id="updateUserForm" action="/CompanyAdmin/CompanyAdmin/UpdateUser" method="post">
+        <input type="hidden" id="userId" name="Id" />
+        <div class="form-group">
+            <label asp-for="Email">Email</label>
+            <input type="email" id="email" class="form-control">
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="FirstName">First Name</label>
+            <input type="text" id="firstName" class="form-control">
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="LastName">Last Name</label>
+            <input asp-for="LastName" id="lastName" class="form-control">
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Department">Department</label>
+            <input type="text" id="department" class="form-control">
+            <span asp-validation-for="Department" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="MobileNumber">Phone Number</label>
+            <input type="text" id="phoneNumber" class="form-control">
+            <span asp-validation-for="MobileNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Permissions</label>
+            <div class="form-check">
+                <input type="checkbox" id="readPermission" class="form-check-input">
+                <label class="form-check-label" asp-for="ReadPermission">Read</label>
+                <span asp-validation-for="ReadPermission" class="text-danger"></span>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" id="writePermission" class="form-check-input">
+                <label class="form-check-label" asp-for="WritePermission">Write</label>
+                <span asp-validation-for="WritePermission" class="text-danger"></span>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" id="uploadPermission" class="form-check-input">
+                <label class="form-check-label" asp-for="UploadPermission">Upload Document</label>
+                <span asp-validation-for="UploadPermission" class="text-danger"></span>
+            </div>
+        </div>
+    </form>
+    <div id="errorMessageContainer" class="text-danger"></div> <!-- Error message container -->
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    <button id="updateUserBtn" type="button" class="btn btn-primary">Update</button>
+</div>

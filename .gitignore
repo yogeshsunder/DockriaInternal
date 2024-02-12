@@ -1,0 +1,25 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+<<<<<<< HEAD
+/.vs/Dockria/FileContentIndex/0ea5dfc4-6113-4439-9a85-d881a2f2425d.vsidx
+/.vs/Dockria/FileContentIndex/fd325e8d-38a4-4a1b-8c63-20fbabfac14c.vsidx
+/.vs/Dockria/FileContentIndex/f3fe4f57-5b8e-4579-9357-f34991e74c40.vsidx
+/.vs/Dockria/FileContentIndex/eaaec281-3573-459b-b520-68a3d7ea8d70.vsidx
+/.vs/Dockria/FileContentIndex/57c05c81-ad24-42a8-933c-3e27572d00a5.vsidx
+/.vs/slnx.sqlite
+/Infrastructure/obj/Debug/net6.0/Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Dockria/obj/Debug/net6.0/WebApp.GeneratedMSBuildEditorConfig.editorconfig
+/Dockria/obj/Debug/net6.0/WebApp.csproj.AssemblyReference.cache
+/Dockria/obj/Debug/net6.0/WebApp.assets.cache
+/Infrastructure/obj/Debug/net6.0/Infrastructure.csproj.AssemblyReference.cache
+/Infrastructure/obj/Debug/net6.0/Infrastructure.assets.cache
+/Domain/obj/Debug/net6.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Domain/obj/Debug/net6.0/Domain.csproj.AssemblyReference.cache
+/Domain/obj/Debug/net6.0/Domain.assets.cache
+=======
+*.vsidx
+>>>>>>> 2115744ad7d4b56c991a214728ed66876056f211
+
+/.vs/ProjectEvaluation/dockria.projects.v7.bin

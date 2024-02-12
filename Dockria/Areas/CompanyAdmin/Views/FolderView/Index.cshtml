@@ -1,0 +1,266 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+@* Define the CSS styles here *@
+@{
+    <text>
+        <style>
+            /* Style for the modal */
+            .modal-content {
+                border: 4px solid #2274A5; /* Blue border */
+                border-radius: 5px;
+                padding: 20px;
+            }
+
+            /* Style for the modal header */
+            .modal-header {
+                background-color: #2274A5; /* Blue background color */
+                color: #fff; /* White text color */
+                border-bottom: 2px solid #2274A5; /* Blue border at the bottom of the header */
+                border-radius: 5px 5px 0 0; /* Rounded corners at the top */
+            }
+
+            /* Style for the modal body (your form) */
+            .modal-body {
+                padding: 20px;
+            }
+
+            /* Style for the modal footer (if you have one) */
+            .modal-footer {
+                background-color: #f1f1f1; /* Light gray background color */
+                border-top: 2px solid #2274A5; /* Blue border at the top of the footer */
+                border-radius: 0 0 5px 5px; /* Rounded corners at the bottom */
+            }
+
+            /* Style for the close button (the "X" button in the header) */
+            .btn-close {
+                color: #fff; /* White text color for the close button */
+            }
+
+            .red-close-button {
+                color: #9F0F0F; /* Change the text color to red */
+            }
+            /* Style for the UPDATE button */
+            .btn-update {
+                background-color: #2274A5;
+                color: #fff;
+            }
+
+            /* Style for the CANCEL button */
+            .btn-cancel {
+                background-color: #A47A15;
+                color: #fff;
+            }
+
+            .btn-save {
+                background-color: #1B998B;
+                color: #fff;
+            }
+
+            /* Hover effect for both buttons (optional) */
+            .btn-update:hover,
+            .btn-cancel:hover {
+                opacity: 0.8;
+                transition: opacity 0.3s;
+            }
+            /*            .dataTables_wrapper .dataTables_length select {
+                                        width: 4.5em !important;
+                                    }
+                        */
+            /* Add a search icon */
+            /*            .dataTables_wrapper::before {
+                                        right: 4%;
+                                        top: 11%;
+                                    }*/
+        </style>
+    </text>
+}
+
+<br />
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">FOLDER LIST</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tblData" class="table table-bordered text-nowrap border-bottom" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="wd-15p border-bottom-0">FOLDER VIEW NAME</th>
+
+                                <th class="text-center">ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <div id="buttonsContainer" class="row justify-content-end" style="margin-right: 0.5em; margin-bottom:0.5em;">
+                            <div class="col-auto">
+                                <button onclick="exportExcel()" class="btn btn-sm btn-link btn-excell"
+                                        title="Export Excel" data-bs-placement="top" style="color: #1B998B;">
+                                    <i style="font-size: 15px" class="fa fa-file-excel-o"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-sm btn-link btn-pdf" style="color: black;"
+                                        title="Export Pdf" data-bs-placement="top" onclick="exportPdf()">
+                                    <i class="fa fa-file-pdf-o" style="font-size: 15px; color: #9F0F0F;"></i>
+                                </button>
+                            </div>
+                            <div class="col-auto">
+                                @*                                <a href="#" class="btn btn-sm btn-link text-success btn-add" data-bs-toggle="modal"
+                                title="Add Folder" data-bs-placement="top" data-bs-original-title="Add Folder" data-bs-target="#addFolderModal">
+                                <i class="fa fa-plus-circle plus-icon" style="font-size: 15px;"></i>
+                                </a>*@
+                                <a href="#" class="btn btn-sm btn-link btn-add" data-bs-toggle="modal"
+                                   title="Add Folder" data-bs-placement="top" data-bs-original-title="Add Folder" data-bs-target="#addFolderModal"
+                                   style="color: #1B998B;">
+                                    <i class="fa fa-plus-circle plus-icon" style="font-size: 16px;"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="addFolderModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="height: 600px; max-width: 1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFolderModalLabel">CREATE NEW FOLDER VIEW</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="FolderAddForm" action="/CompanyAdmin/FolderView/Create" method="post">
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="FolderViewName" class="col-sm-4 col-form-label" style="padding-right: 0;">FOLDER VIEW NAME:</label>
+                            <div class="col-sm-12">
+                                <input type="text" id="folderViewName" name="FolderViewName" class="form-control" style="margin-bottom: 0;" />
+                                <span id="FolderViewNameError" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table id="responsive-datatable" class="table table-bordered text-nowrap border-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="wd-15p border-bottom-0">SELECT OBJECT</th>
+                                                <th class="wd-15p border-bottom-0">SELECT TYPE OF OBJECT</th>
+                                                <th class="wd-15p border-bottom-0">SELECT META DATA</th>
+                                                <th class="wd-15p border-bottom-0">SELECT OPERATOR</th>
+                                                <th class="wd-15p border-bottom-0">ENTER VALUE</th>
+                                                <th class="wd-15p border-bottom-0">ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Meta-Data" id="tableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-save" id="addFolderSubmitButton">SAVE</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="updateFolderModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="height: 600px; max-width: 1100px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFolderModalLabel">CREATE NEW FOLDER VIEW</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form fields for adding/updating user details -->
+                <form id="updateFolderViewForm" action="/CompanyAdmin/FolderView/Update" method="post">
+                    <input type="hidden" id="id" name="Id" />
+                    <div class="card-effect" style="margin-bottom:0.4em;">
+                        <div class="form-group row">
+                            <label for="FolderViewName" class="col-sm-4 col-form-label" style="padding-right: 0;">FOLDER VIEW NAME:</label>
+                            <div class="col-sm-12">
+                                <input type="text" id="folderViewName_1" name="FolderViewName" class="form-control" style="margin-bottom: 0;" />
+                                <span id="FolderViewNameError_1" class="error-message" style="color: #9F0F0F;"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="mata-list-box">
+                                <div class="mata-list">
+                                    <table id="responsive-datatable_1" class="table table-bordered text-nowrap border-bottom">
+                                        <thead>
+                                            <tr>
+                                                <th class="wd-15p border-bottom-0">SELECT OBJECT</th>
+                                                <th class="wd-15p border-bottom-0">SELECT TYPE OF OBJECT</th>
+                                                <th class="wd-15p border-bottom-0">SELECT META DATA</th>
+                                                <th class="wd-15p border-bottom-0">SELECT OPERATOR</th>
+                                                <th class="wd-15p border-bottom-0">ENTER VALUE</th>
+                                                <th class="wd-15p border-bottom-0">ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="Meta-Data" id="updateTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="button-container">
+                    <button type="button" class="btn btn-update" id="updateFolderSubmitBtn">UPDATE</button>
+                    <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">CANCEL</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Custom Alert Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="customAlertModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alert</h5>
+                <button type="button" class="close btn-red" data-bs-dismiss="modal" aria-label="Close" fdprocessedid="pbt1wj">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="customAlertMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script src="~/js/FolderView.js"></script>
+    <script src="~/adminAssets/assets/plugins/notify/js/notifIt.js"></script>
+}

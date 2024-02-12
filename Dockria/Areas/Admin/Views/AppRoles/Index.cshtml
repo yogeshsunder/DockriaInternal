@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<IdentityRole>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card-header bg-info-gradient text-white bubble-shadow">
+					<h4>Master Admin Panel</h4>
+					
+
+				</div>
+                <br /><br />
+
+<div class="bd-example">
+    <table class="table table-bordered table-head-bg-info table-bordered-bd-info" style="border: 4px solid #2274A5;">
+									<thead>
+            <tr class="table table-bordered table-bordered-bd-warning mt-4">
+                <th colspan="3" style="text-align :center;  ">LIST OF ALL ADMINS</th>
+                                        </tr>
+                                        
+										<tr>
+                                            
+											<th scope="row" class="text-center">UNIUQE ADMIN ID</th>
+											<th scope="row" class="text-center">ADMIN NAME</th>
+                                            <th class="text-center">Actions</th>
+											
+										</tr>
+									</thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+                <tr>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.Id)</td>
+                    <td class="text-center">@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td class="text-center">
+                        <input type="submit" value="Edit" class=" btn btn-success" />
+                        <input type="submit" value="Delete" class="btn btn-danger" /></td>
+                </tr>
+        }
+    </tbody>
+</table>
+</div>
